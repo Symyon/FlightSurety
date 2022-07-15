@@ -24,7 +24,10 @@ contract FlightSuretyApp {
     uint8 private constant STATUS_CODE_LATE_TECHNICAL = 40;
     uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
-    address private contractOwner;          // Account used to deploy contract
+    uint256 private airlineFundsRequirement = 10000000000000000000; // Funds required for a new airline to register in wei
+
+    address private contractOwner; // Account used to deploy contract
+    FlightSuretyData flightSuretyData;
 
     struct Flight {
         bool isRegistered;
@@ -68,15 +71,12 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
     /**
-    * @dev Contract constructor
-    *
-    */
-    constructor
-                                (
-                                ) 
-                                public 
-    {
+     * @dev Contract constructor
+     *
+     */
+    constructor(address dataContract) public {
         contractOwner = msg.sender;
+        flightSuretyData = FlightSuretyData(dataContract);
     }
 
     /********************************************************************************************/
