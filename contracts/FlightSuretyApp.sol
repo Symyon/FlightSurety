@@ -25,8 +25,8 @@ contract FlightSuretyApp {
     uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
     uint256 private airlineFundsRequirement = 10000000000000000000; // Funds required for a new airline to register in wei
-
     address private contractOwner; // Account used to deploy contract
+    bool private operational = true; // Blocks all state changes throughout the contract if false
     FlightSuretyData flightSuretyData;
 
     struct Flight {
@@ -37,43 +37,23 @@ contract FlightSuretyApp {
     }
     mapping(bytes32 => Flight) private flights;
 
+    constructor(address dataContract) public {
+        contractOwner = msg.sender;
+        flightSuretyData = FlightSuretyData(dataContract);
+    }
+
     /********************************************************************************************/
     /*                                       FUNCTION MODIFIERS                                 */
     /********************************************************************************************/
 
-    // Modifiers help avoid duplication of code. They are typically used to validate something
-    // before a function is allowed to be executed.
-
-    /**
-     * @dev Modifier that requires the "operational" boolean variable to be "true"
-     *      This is used on all state changing functions to pause the contract in
-     *      the event there is an issue that needs to be fixed
-     */
     modifier requireIsOperational() {
-        // Modify to call data contract's status
-        require(true, "Contract is currently not operational");
-        _; // All modifiers require an "_" which indicates where the function body will be added
-    }
-
-    /**
-     * @dev Modifier that requires the "ContractOwner" account to be the function caller
-     */
-    modifier requireContractOwner() {
-        require(msg.sender == contractOwner, "Caller is not contract owner");
+         require(isOperational(), "Contract is currently not operational");
         _;
     }
 
-    /********************************************************************************************/
-    /*                                       CONSTRUCTOR                                        */
-    /********************************************************************************************/
-
-    /**
-     * @dev Contract constructor
-     *
-     */
-    constructor(address dataContract) public {
-        contractOwner = msg.sender;
-        flightSuretyData = FlightSuretyData(dataContract);
+    modifier requireContractOwner() {
+        require(msg.sender == contractOwner, "Caller is not contract owner");
+        _;
     }
 
     /********************************************************************************************/
@@ -81,7 +61,7 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
     function isOperational() public pure returns (bool) {
-        return true; // Modify to call data contract's status
+        return operational;
     }
 
     /********************************************************************************************/
