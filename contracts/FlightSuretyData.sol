@@ -11,6 +11,7 @@ contract FlightSuretyData {
 
     address private contractOwner; // Account used to deploy contract
     bool private operational = true; // Blocks all state changes throughout the contract if false
+    mapping(address => bool) private authorizedCallers;
     struct Airline {
         string name;
         address airlineAddress;
@@ -47,8 +48,6 @@ contract FlightSuretyData {
     /**
      * @dev Modifier that requires the "operational" boolean variable to be "true"
      *      This is used on all state changing functions to pause the contract in
-    *      This is used on all state changing functions to pause the contract in 
-     *      This is used on all state changing functions to pause the contract in
      *      the event there is an issue that needs to be fixed
      */
     modifier requireIsOperational() {
@@ -61,6 +60,14 @@ contract FlightSuretyData {
      */
     modifier requireContractOwner() {
         require(msg.sender == contractOwner, "Caller is not contract owner");
+        _;
+    }
+
+    modifier requiredAuthorized() {
+        require(
+            authorizedCallers[msg.sender] == true,
+            "Caller is not authorized"
+        );
         _;
     }
 
@@ -88,6 +95,13 @@ contract FlightSuretyData {
             "Operational status cannot be set to the same value"
         );
         operational = mode;
+    }
+
+    function setAuthorization(address _address, bool _authorized)
+        external
+        requireContractOwner
+    {
+        authorizedCallers[_address] = _authorized;
     }
 
     /********************************************************************************************/
