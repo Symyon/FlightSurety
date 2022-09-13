@@ -24,10 +24,11 @@ contract FlightSuretyApp {
     uint8 private constant STATUS_CODE_LATE_TECHNICAL = 40;
     uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
-    uint256 private airlineFundsRequirement = 10000000000000000000; // Funds required for a new airline to register in wei
+    uint256 private airlineFundsRequirement = '10000000000000000000'; // Funds required for a new airline to register in wei
     address private contractOwner; // Account used to deploy contract
     bool private operational = true; // Blocks all state changes throughout the contract if false
     FlightSuretyData flightSuretyData;
+    bytes8  multipartySplit = 2; // Airlines percentage required to vote for a new airline to be registered (2 = 50%)
 
     struct Flight {
         bool isRegistered;
@@ -62,6 +63,14 @@ contract FlightSuretyApp {
 
     function isOperational() public pure returns (bool) {
         return operational;
+    }
+    
+    function setOperatingStatus(bool mode) external requireContractOwner {
+        require(
+            mode != operational,
+            "Operational status cannot be set to the same value"
+        );
+        operational = mode;
     }
 
     /********************************************************************************************/

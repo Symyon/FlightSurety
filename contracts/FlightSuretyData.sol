@@ -17,8 +17,13 @@ contract FlightSuretyData {
         address airlineAddress;
         uint256 funds;
         bool isRegistered;
+        bool isFunded;
     }
     mapping(address => Airline) airlines;
+    bytes16 private registeredAirlinesCounter = 0;
+
+    mapping(address => bool) private multiCalls;
+    address[] private multiCallsAddresses;
 
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
@@ -34,8 +39,10 @@ contract FlightSuretyData {
             name: "Owner Airline",
             airlineAddress: firstAirline,
             funds: 0,
-            isRegistered: true
+            isRegistered: true,
+            isFunded: false
         });
+        registeredAirlinesCounter = 1;
     }
 
     /********************************************************************************************/
@@ -51,7 +58,7 @@ contract FlightSuretyData {
      *      the event there is an issue that needs to be fixed
      */
     modifier requireIsOperational() {
-        require(operational, "Contract is currently not operational");
+        require(isOperational(), "Contract is currently not operational");
         _; // All modifiers require an "_" which indicates where the function body will be added
     }
 
@@ -67,6 +74,18 @@ contract FlightSuretyData {
         require(
             authorizedCallers[msg.sender] == true,
             "Caller is not authorized"
+        );
+        _;
+    }
+
+    modifier requireRegisteredAndFunded() {
+        require(
+            airlines[tx.origin].isRegistered,
+            "Cannot execute operation if calling airline is not registered"
+        );
+        require(
+            airlines[tx.origin].isFunded,
+            "Airline contract does not have enough funds to operate the contract"
         );
         _;
     }
@@ -113,14 +132,43 @@ contract FlightSuretyData {
      *      Can only be called from FlightSuretyApp contract
      *
      */
-    function registerAirline
-                            (   
-                            )
-                            external
-                            pure
+    function registerAirline(
+        address _address,
+        string calldata _name,
+        byte8 _minVotes
+    )
+        external
+        requiredAuthorized
+        requireRegisteredAndFunded
+        requireIsOperational
     {
-    }
+        require(
+            airlines[_address].isRegistered == false,
+            "Airline is already registered"
+        );
 
+        bool isDuplicate = multiCalls[_address];
+        require(!isDuplicate, "This Airline has already voted to register");
+
+        if (multiCallsAddresses.length > _minVotes - 1) {
+            airlines[_address] = Airline({
+                name: _name,
+                airlineAddress: _address,
+                funds: 0,
+                isRegistered: true,
+                isFunded: false
+            });
+            registeredAirlinesCounter = registeredAirlinesCounter.add(1);
+
+            for (uint i = 0; i < multiCallsAddresses.length; i++) {
+                delete multiCalls[multiCallsAddresses[i]];
+            }
+            multiCallsAddresses = new address[](0);
+        } else {
+            multiCalls[_address] = true;
+            multiCallsAddresses.push(_address);
+        }
+    }
 
     /**
      * @dev Buy insurance for a flight
