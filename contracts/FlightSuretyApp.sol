@@ -107,7 +107,18 @@ contract FlightSuretyApp {
      * @dev Register a future flight for insuring.
      *
      */
-    function registerFlight() external pure {}
+    function registerFlight(string calldata _name)
+        external
+        requireIsOperational
+    {
+        bytes32 flightKey = getFlightKey(msg.sender, _name, now);
+        flights[flightKey] = Flight({
+            isRegistered: true,
+            statusCode: 0,
+            updatedTimestamp: now,
+            airline: msg.sender
+        });
+    }
 
     /**
      * @dev Called after oracle has updated flight status
