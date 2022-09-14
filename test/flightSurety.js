@@ -5,8 +5,9 @@ contract("Flight Surety Tests", async (accounts) => {
   var config;
   before("setup contract", async () => {
     config = await Test.Config(accounts);
-    await config.flightSuretyData.authorizeCaller(
-      config.flightSuretyApp.address
+    await config.flightSuretyData.setAuthorization(
+      config.flightSuretyApp.address,
+      true
     );
   });
 
@@ -46,6 +47,9 @@ contract("Flight Surety Tests", async (accounts) => {
       false,
       "Access not restricted to Contract Owner"
     );
+
+    // Set it back for other tests to work
+    await config.flightSuretyData.setOperatingStatus(true);
   });
 
   it(`(multiparty) can block access to functions using requireIsOperational when operating status is false`, async function () {
@@ -53,7 +57,7 @@ contract("Flight Surety Tests", async (accounts) => {
 
     let reverted = false;
     try {
-      await config.flightSurety.setTestingMode(true);
+      await config.flightSurety.registerFlight("Test Flight");
     } catch (e) {
       reverted = true;
     }
@@ -69,11 +73,11 @@ contract("Flight Surety Tests", async (accounts) => {
 
     // ACT
     try {
-      await config.flightSuretyApp.registerAirline(newAirline, {
+      await config.flightSuretyApp.registerAirline(newAirline, "Airline 2", {
         from: config.firstAirline,
       });
     } catch (e) {}
-    let result = await config.flightSuretyData.isAirline.call(newAirline);
+    let result = await config.flightSuretyData.isAirlineRegistered.call(newAirline);
 
     // ASSERT
     assert.equal(
@@ -83,3 +87,12 @@ contract("Flight Surety Tests", async (accounts) => {
     );
   });
 });
+
+//TEst required
+// First airline is registered when contract is deployed.
+// Only existing airline may register a new airline until there are at least four airlines registered
+// Registration of fifth and subsequent airlines requires multi-party consensus of 50% of registered airlines
+// Airline can be registered, but does not participate in contract until it submits funding of 10 ether
+// Passengers may pay up to 1 ether for purchasing flight insurance.
+// If flight is delayed due to airline fault, passenger receives credit of 1.5X the amount they paid
+// Passenger can withdraw any funds owed to them as a result of receiving credit for insurance payout
