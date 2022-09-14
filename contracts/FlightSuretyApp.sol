@@ -24,11 +24,11 @@ contract FlightSuretyApp {
     uint8 private constant STATUS_CODE_LATE_TECHNICAL = 40;
     uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
-    uint256 private airlineFundsRequirement = '10000000000000000000'; // Funds required for a new airline to register in wei
+    uint256 private airlineFundsRequirement = 10000000000000000000; // Funds required for a new airline to register in wei
     address private contractOwner; // Account used to deploy contract
     bool private operational = true; // Blocks all state changes throughout the contract if false
     FlightSuretyData flightSuretyData;
-    bytes8  multipartySplit = 2; // Airlines percentage required to vote for a new airline to be registered (2 = 50%)
+    uint256 multipartySplit = 2; // Airlines percentage required to vote for a new airline to be registered (2 = 50%)
 
     struct Flight {
         bool isRegistered;
@@ -48,7 +48,7 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
     modifier requireIsOperational() {
-         require(isOperational(), "Contract is currently not operational");
+        require(isOperational(), "Contract is currently not operational");
         _;
     }
 
@@ -61,10 +61,10 @@ contract FlightSuretyApp {
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
 
-    function isOperational() public pure returns (bool) {
+    function isOperational() public view returns (bool) {
         return operational;
     }
-    
+
     function setOperatingStatus(bool mode) external requireContractOwner {
         require(
             mode != operational,
@@ -81,12 +81,26 @@ contract FlightSuretyApp {
      * @dev Add an airline to the registration queue
      *
      */
-    function registerAirline()
+    function registerAirline(address _address, string calldata _name)
         external
-        pure
+        requireIsOperational
         returns (bool success, uint256 votes)
     {
-        return (success, 0);
+        uint256 registeredCount = flightSuretyData.getRegisteredAirlinesCount();
+        uint256 minVotes = registeredCount < 4
+            ? 1
+            : registeredCount / multipartySplit;
+
+        flightSuretyData.registerAirline(_address, _name, minVotes);
+        return (true, 0);
+    }
+
+    function fundAirline(address _address)
+        external
+        payable
+        requireIsOperational
+    {
+        flightSuretyData.fundAirline.value(msg.value)(_address);
     }
 
     /**
@@ -295,4 +309,14 @@ contract FlightSuretyApp {
     // endregion
 }
 
-contract FlightSuretyData {}
+contract FlightSuretyData {
+    function getRegisteredAirlinesCount() external view returns (uint256);
+
+    function registerAirline(
+        address _address,
+        string calldata _name,
+        uint256 _minVotes
+    ) external;
+
+    function fundAirline(address _address) external payable;
+}

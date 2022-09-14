@@ -20,7 +20,7 @@ contract FlightSuretyData {
         bool isFunded;
     }
     mapping(address => Airline) airlines;
-    bytes16 private registeredAirlinesCounter = 0;
+    uint256 private registeredAirlinesCounter = 0;
 
     mapping(address => bool) private multiCalls;
     address[] private multiCallsAddresses;
@@ -135,7 +135,7 @@ contract FlightSuretyData {
     function registerAirline(
         address _address,
         string calldata _name,
-        byte8 _minVotes
+        uint256 _minVotes
     )
         external
         requiredAuthorized
@@ -168,6 +168,24 @@ contract FlightSuretyData {
             multiCalls[_address] = true;
             multiCallsAddresses.push(_address);
         }
+    }
+
+    function getRegisteredAirlinesCount() external view returns (uint256) {
+        return registeredAirlinesCounter;
+    }
+
+    function fundAirline(address _address)
+        external
+        payable
+        requiredAuthorized
+        requireIsOperational
+    {
+        require(
+            airlines[_address].isRegistered == true,
+            "Airline is not registered"
+        );
+
+        airlines[_address].funds += msg.value;
     }
 
     /**
