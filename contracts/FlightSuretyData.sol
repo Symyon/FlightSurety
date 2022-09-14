@@ -174,6 +174,14 @@ contract FlightSuretyData {
         return registeredAirlinesCounter;
     }
 
+    function isAirlineRegistered(address _address)
+        external
+        view
+        returns (bool)
+    {
+        return airlines[_address].isRegistered;
+    }
+
     function fundAirline(address _address)
         external
         payable
