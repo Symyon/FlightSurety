@@ -1,42 +1,193 @@
 body {
-    background-image: url('flight.jpg'); /* Source: iStockPhoto */
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-image: url("flight.jpg"); /* Source: iStockPhoto */
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.container {
-    margin-top: 400px;
-    background-color: #000;
-    opacity: 0.9;
-    color: #fff;
-    padding: 40px;
+nav {
+  background-color: #343a40;
+  margin: 24px 32px;
+  border-radius: 12px;
 }
 
-.top-20 {
-    margin-top: 20px;
+#logo {
+  color: #ffbf2d;
+  font-size: 2.25rem;
+  width: 100%;
+  text-align: center;
 }
 
-h5 {
-    color: #999999;
+.content {
+  color: #fff;
+  padding: 2px 32px;
+  margin: 106px 0px 0px 0px;
+}
+
+.panel {
+  margin: 24px 0px;
+  padding: 16px 24px;
+  background-color: #323232;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.top-bar-title {
+  color: #fff;
+  font-size: 2.25rem;
+  font-weight: 500;
+}
+
+.active-account-info {
+  background-color: #484646;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 12px;
+  padding: 12px 16px;
+  width: 40%;
+}
+
+.active-account {
+  min-width: 25%;
+}
+
+.active-account-address {
+  color: #9a9a9a;
+}
+
+.contract-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin: 16px 0px;
+}
+
+.contract-info {
+  width: 50%;
+}
+
+.contract-info-title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-top: 16px;
+}
+
+.contract-info-address {
+  color: #9a9a9a;
+  font-size: 1.5rem;
+}
+
+.contract-status-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 50%;
+  margin: 16px 0px 4px 0px;
+}
+
+.contract-status-cell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.contract-status {
+  color: #d14343;
+  font-size: 1.25rem;
+}
+
+.btn-custom {
+  margin: 0px 32px;
+  background-color: #9e9e9e;
+  color: #000;
+  font-size: 1.25rem;
+  border-radius: 12px;
+  border-color: #9e9e9e;
+  min-width: 128px;
+}
+
+.row-custom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 16px 0px;
+}
+
+.input-custom {
+  color: #9a9a9a;
+  border-radius: 12px;
+  min-width: 40%;
+  font-size: 1.25rem;
+  padding: 6px;
+}
+
+.input-amount {
+  color: #9a9a9a;
+  border-radius: 12px;
+  width: 128px;
+  font-size: 1.25rem;
+  padding: 6px;
+  margin: 0px 16px;
+  text-align: end;
+}
+
+.btn-custom-right {
+  margin: 0px 32px;
+  background-color: #9e9e9e;
+  color: #000;
+  font-size: 1.25rem;
+  border-radius: 12px;
+  border-color: #9e9e9e;
+  min-width: 128px;
+}
+
+.paragraph {
+  margin: 16px;
+}
+
+.title {
+  min-width: 128px;
+}
+
+.title-medium {
+  min-width: 128px;
+  font-size: 1.25rem;
+}
+
+.title-big {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-top: 48px;
+}
+
+.value {
+  color: #9a9a9a;
 }
 
 section {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 .field {
-    font-weight: bold;
-    text-align: right;
+  font-weight: bold;
+  text-align: right;
 }
 
 .field-value {
-    color: #0e7fa8;
+  color: #0e7fa8;
 }
 
 label.form {
-    font-size: 14px;
-    margin-right: 20px;
+  font-size: 14px;
+  margin-right: 20px;
 }
 input {
-    margin-right: 30px;
+  margin-right: 30px;
 }

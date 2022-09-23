@@ -1,33 +1,251 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>FlightSurety</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
 
-<body>
-
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">FlightSurety</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+      <a class="navbar-brand" id="logo" href="#">FlightSurety</a>
     </nav>
 
-    <main class="container">
+    <main class="content">
+      <div class="panel">
+        <div class="top-bar">
+          <div class="top-bar-title">Admin Panel</div>
+          <div class="active-account-info">
+            <div class="active-account">
+              <div class="active-account-title">Active account:</div>
+              <div class="active-account-address">N/A</div>
+            </div>
+            <div class="active-account">
+              <div class="active-account-title">Role:</div>
+              <div class="active-account-address">N/A</div>
+            </div>
+          </div>
+        </div>
 
-        <div id="display-wrapper" class="top-20">
+        <div class="contract-info-container">
+          <div class="contract-info">
+            <div class="contract-info-title">App Contract:</div>
+            <div class="contract-info-address">N/A</div>
+          </div>
+          <div class="contract-info">
+            <div class="contract-info-title">Data Contract:</div>
+            <div class="contract-info-address">N/A</div>
+          </div>
         </div>
-        <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+
+        <div>
+          <div class="contract-info-title">App Contract Status</div>
+          <div class="contract-status-options">
+            <div class="contract-status-cell">
+              <div class="contract-status">Inoperative</div>
+              <btn class="btn btn-primary btn-custom" id="submit-oracle"
+                >Activate</btn
+              >
+            </div>
+            <div class="contract-status-cell">
+              <div class="contract-status">Unauthorized</div>
+              <btn class="btn btn-primary btn-custom" id="submit-oracle"
+                >Authorize</btn
+              >
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="panel">
+        <div class="top-bar">
+          <div class="top-bar-title">Airlines</div>
+          <div class="active-account-info">
+            <div class="active-account">
+              <div class="active-account-title">Active account:</div>
+              <div class="active-account-address">N/A</div>
+            </div>
+            <div class="active-account">
+              <div class="active-account-title">Status:</div>
+              <div class="active-account-address">N/A</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Register new airline</div>
+          <div class="row-custom">
+            <input class="input-custom" type="text" id="flight-number" />
+            <btn class="btn btn-primary btn-custom" id="submit-oracle"
+              >Register</btn
+            >
+            <div class="contract-status">
+              Available for registered airlines only
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Fund airline</div>
+          <div class="row-custom">
+            <input class="input-custom" type="text" id="flight-number" />
+            <btn class="btn btn-primary btn-custom" id="submit-oracle"
+              >Fund</btn
+            >
+            <div class="contract-status">Non funded</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Get airlines details</div>
+          <div class="row-custom">
+            <input class="input-custom" type="text" id="flight-number" />
+            <btn class="btn btn-primary btn-custom" id="submit-oracle"
+              >Fetch</btn
+            >
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="row-custom">
+            <div class="title">Name:</div>
+            <div class="value">...</div>
+          </div>
+
+          <div class="row-custom">
+            <div class="title">Address:</div>
+            <div class="value">...</div>
+          </div>
+
+          <div class="row-custom">
+            <div class="title">Funds:</div>
+            <div class="value">...</div>
+          </div>
+
+          <div class="row-custom">
+            <div class="title">Registered:</div>
+            <div class="value">...</div>
+          </div>
+
+          <div class="row-custom">
+            <div class="title">Funded:</div>
+            <div class="value">...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="top-bar">
+          <div class="top-bar-title">Passenger Account</div>
+          <div class="active-account-info">
+            <div class="active-account">
+              <div class="active-account-title">Active account:</div>
+              <div class="active-account-address">N/A</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Purchase Insurance</div>
+          <div class="row-custom">
+            <div class="title-medium">Airline:</div>
+            <input class="input-custom" type="text" id="insurance-airline" />
+          </div>
+          <div class="row-custom">
+            <div class="title-medium">Flight:</div>
+            <input class="input-custom" type="text" id="insurance-fight" />
+          </div>
+          <div class="row-custom">
+            <div class="title-medium">Insurance amount:</div>
+            <input
+              class="input-amount"
+              type="text"
+              id="insurance-amount"
+              placeholder="0.00"
+            />
+            <div class="title-medium">ETH</div>
+            <div style="flex: 1"></div>
+            <btn
+              class="btn btn-primary btn-custom-right"
+              id="insurance-purchase-button"
+              >Purchase</btn
+            >
+            <div style="flex: 4"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Flight Status</div>
+          <div class="row-custom">
+            <div class="title-medium">Flight:</div>
+            <input class="input-custom" type="text" id="insurance-airline" />
+            <btn
+              class="btn btn-primary btn-custom-right"
+              id="insurance-purchase-button"
+              >Check Status</btn
+            >
+          </div>
+          <div class="row-custom">
+            <div style="margin-left: 128px"></div>
+            <div class="title">Payout address:</div>
+            <div class="value">N/A</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Payout</div>
+          <div class="row-custom">
+            <input
+              class="input-amount"
+              type="text"
+              id="insurance-amount"
+              placeholder="0.00"
+            />
+            <div class="title-medium">ETH</div>
+            <btn class="btn btn-primary btn-custom-right" id="withdraw-button"
+              >Withdraw</btn
+            >
+            <btn
+              class="btn btn-primary btn-custom-right"
+              id="payout-refresh-button"
+              >Refresh</btn
+            >
+          </div>
+          <div class="row-custom">
+            <div style="margin-left: 16px"></div>
+            <div class="title">Withdraw to:</div>
+            <div class="value">N/A</div>
+            <div style="margin-left: 48px"></div>
+            <div class="title">Insurance payout available:</div>
+            <div style="margin-left: 32px"></div>
+            <div class="value">0.00 ETH</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <label class="form">Flight</label>
+        <input type="text" id="flight-number" />
+        <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn> -->
+
+      <!-- <div class="panel">
+        <label class="form">Flight</label>
+        <input type="text" id="flight-number" />
+        <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+      </div>
+
+      <div class="panel">
+        <label class="form">Airline</label>
+        <input type="text" id="airline-address" />
+        <btn class="btn btn-primary" id="fetch-airline">Show airline</btn>
+      </div> -->
     </main>
-
-</body>
-
+  </body>
 </html>
