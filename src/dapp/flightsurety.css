@@ -5,9 +5,14 @@ body {
 }
 
 nav {
+  background-image: linear-gradient(black, #001b30cc, #001b3099, #001b3022);
+}
+
+.navbar-brand {
   background-color: #343a40;
   margin: 24px 32px;
   border-radius: 12px;
+  width: 100%;
 }
 
 #logo {
@@ -50,15 +55,22 @@ nav {
   justify-content: space-between;
   border-radius: 12px;
   padding: 12px 16px;
-  width: 40%;
 }
 
 .active-account {
   min-width: 25%;
+  margin-right: 16px;
 }
 
 .active-account-address {
   color: #9a9a9a;
+  flex: 1;
+  min-width: 480px;
+}
+
+.active-account-role {
+  color: #9a9a9a;
+  flex: 1;
 }
 
 .contract-info-container {
