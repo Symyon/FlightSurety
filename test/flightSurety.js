@@ -86,6 +86,22 @@ contract("Flight Surety Tests", async (accounts) => {
       "Airline should not be able to register another airline if it hasn't provided funding"
     );
   });
+
+  it("can authorize another app contract", async () => {
+    let authorized = await config.flightSuretyData.isAuthorized.call(
+      config.testAddresses[1]
+    );
+    assert.equal(authorized, false, "Contract is already authorized");
+
+    await config.flightSuretyData.setAuthorization(
+      config.testAddresses[1],
+      true
+    );
+    authorized = await config.flightSuretyData.isAuthorized.call(
+      config.testAddresses[1]
+    );
+    assert.equal(authorized, true, "Contract is not authorized");
+  });
 });
 
 //TEst required
