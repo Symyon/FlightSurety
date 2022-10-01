@@ -5,13 +5,13 @@ import Web3 from "web3";
 
 export default class Contract {
   constructor(network, callback) {
-    let config = Config[network];
-    this.initialize(config, callback);
+    this.config = Config[network];
+    this.initialize(this.config, callback);
     this.owner = null;
     this.airlines = [];
     this.passengers = [];
-    this.appContractAddress = config.appAddress;
-    this.dataContractAddress = config.dataAddress;
+    this.appContractAddress = this.config.appAddress;
+    this.dataContractAddress = this.config.dataAddress;
     this.getActiveWalletAccount.bind(this);
     this.setActiveWalletAccount.bind(this);
   }
