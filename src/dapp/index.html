@@ -50,14 +50,18 @@
               <btn class="btn btn-primary btn-custom" id="activate-app-contract"
                 >Activate</btn
               >
-              <div class="contract-status">Inoperative</div>
+              <div class="contract-status" id="app-operational-status">
+                Inoperative
+              </div>
             </div>
             <div class="contract-status-cell">
-              <btn class="btn btn-primary btn-custom" id="submit-oracle"
+              <btn class="btn btn-primary btn-custom" id="authorize-app-contract"
                 >Authorize</btn
               >
               <div></div>
-              <div class="contract-status">Unauthorized</div>
+              <div class="contract-status" id="app-authorized-status">
+                Unauthorized
+              </div>
             </div>
           </div>
           <div class="contract-info">
@@ -72,7 +76,9 @@
                 id="activate-data-contract"
                 >Activate</btn
               >
-              <div class="contract-status">Inoperative</div>
+              <div class="contract-status" id="data-operational-status">
+                Inoperative
+              </div>
             </div>
           </div>
         </div>

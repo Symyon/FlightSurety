@@ -75,11 +75,6 @@ export default class Contract {
     });
   }
 
-  isOperational(callback) {
-    let self = this;
-    self.flightSuretyApp.methods.isOperational().call({ from: self.owner });
-  }
-
   isAppOwner(callback) {
     let self = this;
     self.flightSuretyApp.methods
@@ -93,6 +88,33 @@ export default class Contract {
     let self = this;
     self.flightSuretyData.methods
       .isSenderOwner()
+      .call({ from: self.owner }, (error, result) => {
+        callback(error, result);
+      });
+  }
+
+  isAppOperational(callback) {
+    let self = this;
+    self.flightSuretyApp.methods
+      .isOperational()
+      .call({ from: self.owner }, (error, result) => {
+        callback(error, result);
+      });
+  }
+
+  isAppAuthorized(callback) {
+    let self = this;
+    self.flightSuretyData.methods
+      .isAuthorized(self.appContractAddress)
+      .call({ from: self.owner }, (error, result) => {
+        callback(error, result);
+      });
+  }
+
+  isDataOperational(callback) {
+    let self = this;
+    self.flightSuretyData.methods
+      .isOperational()
       .call({ from: self.owner }, (error, result) => {
         callback(error, result);
       });
