@@ -10,33 +10,32 @@ function updateActiveAccountDisplayed(newAccount) {
 function displayAdminPanelInfo(contract) {
   DOM.elid("app-contract-address").textContent = contract.config.appAddress;
   DOM.elid("data-contract-address").textContent = contract.config.dataAddress;
-  // let section = DOM.section();
-  // section.appendChild(DOM.h2(title));
-  // section.appendChild(DOM.h5(description));
-  // results.map((result) => {
-  //   let row = section.appendChild(DOM.div({ className: "row" }));
-  //   row.appendChild(DOM.div({ className: "col-sm-4 field" }, result.label));
-  //   row.appendChild(
-  //     DOM.div(
-  //       { className: "col-sm-8 field-value" },
-  //       result.error ? String(result.error) : String(result.value)
-  //     )
-  //   );
-  //   section.appendChild(row);
-  // });
-  // displayDiv.append(section);
+}
+
+function updateActiveAccountRoleDisplayed(nodeId, isOwner, error) {
+  DOM.elid(nodeId).textContent = error ? "N/A" : isOwner ? "Yes" : "No";
+}
+
+function initAccountSelected(contract) {
+  updateActiveAccountDisplayed(contract.getActiveWalletAccount());
+  contract.isAppOwner((error, isAppOwner) => {
+    updateActiveAccountRoleDisplayed("contract-owner", isAppOwner, error);
+  });
+  contract.isDataOwner((error, isDataOwner) => {
+    updateActiveAccountRoleDisplayed("data-owner", isDataOwner, error);
+  });
 }
 
 (async () => {
   let result = null;
 
   let contract = new Contract("localhost", () => {
-    updateActiveAccountDisplayed(contract.getActiveWalletAccount());
+    initAccountSelected(contract);
+
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", function (accounts) {
-        const owner = contract.getActiveWalletAccount();
         contract.setActiveWalletAccount(accounts[0]);
-        updateActiveAccountDisplayed(contract.getActiveWalletAccount());
+        initAccountSelected(contract);
       });
     }
 

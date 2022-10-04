@@ -77,9 +77,25 @@ export default class Contract {
 
   isOperational(callback) {
     let self = this;
+    self.flightSuretyApp.methods.isOperational().call({ from: self.owner });
+  }
+
+  isAppOwner(callback) {
+    let self = this;
     self.flightSuretyApp.methods
-      .isOperational()
-      .call({ from: self.owner }, callback);
+      .isSenderOwner()
+      .call({ from: self.owner }, (error, result) => {
+        callback(error, result);
+      });
+  }
+
+  isDataOwner(callback) {
+    let self = this;
+    self.flightSuretyData.methods
+      .isSenderOwner()
+      .call({ from: self.owner }, (error, result) => {
+        callback(error, result);
+      });
   }
 
   fetchAirlineInfo(airline, callback) {
