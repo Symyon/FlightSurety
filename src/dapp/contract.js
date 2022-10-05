@@ -1,7 +1,7 @@
-import FlightSuretyApp from "../../build/contracts/FlightSuretyApp.json";
-import FlightSuretyData from "../../build/contracts/FlightSuretyData.json";
-import Config from "./config.json";
-import Web3 from "web3";
+import FlightSuretyApp from '../../build/contracts/FlightSuretyApp.json';
+import FlightSuretyData from '../../build/contracts/FlightSuretyData.json';
+import Config from './config.json';
+import Web3 from 'web3';
 
 export default class Contract {
   constructor(network, callback) {
@@ -36,7 +36,7 @@ export default class Contract {
         await window.ethereum.enable();
       } catch (error) {
         // User denied account access...
-        console.error("User denied account access");
+        console.error('User denied account access');
       }
     }
     // Legacy dapp browsers...
@@ -51,14 +51,8 @@ export default class Contract {
 
     this.getActiveWalletAccount();
 
-    this.flightSuretyApp = new this.web3.eth.Contract(
-      FlightSuretyApp.abi,
-      config.appAddress
-    );
-    this.flightSuretyData = new this.web3.eth.Contract(
-      FlightSuretyData.abi,
-      config.dataAddress
-    );
+    this.flightSuretyApp = new this.web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
+    this.flightSuretyData = new this.web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
 
     this.web3.eth.getAccounts((error, accts) => {
       let counter = 1;
@@ -77,73 +71,59 @@ export default class Contract {
 
   isDataOwner(callback) {
     let self = this;
-    self.flightSuretyData.methods
-      .isSenderOwner()
-      .call({ from: self.owner }, (error, result) => {
-        callback(error, result);
-      });
+    self.flightSuretyData.methods.isSenderOwner().call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
   }
 
   isDataOperational(callback) {
     let self = this;
-    self.flightSuretyData.methods
-      .isOperational()
-      .call({ from: self.owner }, (error, result) => {
-        callback(error, result);
-      });
+    self.flightSuretyData.methods.isOperational().call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
   }
 
   isAppAuthorized(callback) {
     let self = this;
-    self.flightSuretyData.methods
-      .isAuthorized(self.appContractAddress)
-      .call({ from: self.owner }, (error, result) => {
-        callback(error, result);
-      });
+    self.flightSuretyData.methods.isAuthorized(self.appContractAddress).call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
   }
 
   isAppOwner(callback) {
     let self = this;
-    self.flightSuretyApp.methods
-      .isSenderOwner()
-      .call({ from: self.owner }, (error, result) => {
-        callback(error, result);
-      });
+    self.flightSuretyApp.methods.isSenderOwner().call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
   }
 
   isAppOperational(callback) {
     let self = this;
-    self.flightSuretyApp.methods
-      .isOperational()
-      .call({ from: self.owner }, (error, result) => {
-        callback(error, result);
-      });
+    self.flightSuretyApp.methods.isOperational().call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
   }
 
   setOperatingStatus(status, callback) {
     let self = this;
-    self.flightSuretyApp.methods
-      .setOperatingStatus(status)
-      .send({ from: self.owner }, (error, result) => {
-        callback(error, result);
-      });
+    self.flightSuretyApp.methods.setOperatingStatus(status).send({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
   }
 
   fetchAirlineInfo(airline, callback) {
     let self = this;
-    console.log("we are here contract info", airline);
-    console.log("owner is:", self.owner);
-    console.log("Testing contract", this.appContractAddress);
+    console.log('we are here contract info', airline);
+    console.log('owner is:', self.owner);
+    console.log('Testing contract', this.appContractAddress);
 
-    self.flightSuretyData.methods
-      .isAuthorized(this.appContractAddress)
-      .call({ from: self.owner }, (error, result) => {
-        if (error) {
-          console.log("isAuthorized error is:", error);
-        } else {
-          console.log("isAuthorized", result);
-        }
-      });
+    self.flightSuretyData.methods.isAuthorized(this.appContractAddress).call({ from: self.owner }, (error, result) => {
+      if (error) {
+        console.log('isAuthorized error is:', error);
+      } else {
+        console.log('isAuthorized', result);
+      }
+    });
 
     // this.flightSuretyData.methods
     //   .setAuthorization(this.appContractAddress, true)

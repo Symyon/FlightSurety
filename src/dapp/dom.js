@@ -52,9 +52,7 @@ export default class DOM {
       if (styleName in el.style) {
         el.style[styleName] = styles[styleName]; // eslint-disable-line no-param-reassign
       } else {
-        console.warn(
-          `${styleName} is not a valid style for a <${el.tagName.toLowerCase()}>`
-        );
+        console.warn(`${styleName} is not a valid style for a <${el.tagName.toLowerCase()}>`);
       }
     });
   }
