@@ -1,68 +1,11 @@
 import DOM from "./dom";
 import Contract from "./contract";
 import "./flightsurety.css";
-
-const getOperationalDomValues = (
-  error,
-  value,
-  positiveValue,
-  negativeValue
-) => {
-  const text = error ? "N/A" : value ? positiveValue : negativeValue;
-  const color = error ? "gray" : value ? "green" : "#d14343";
-  return { text, color };
-};
+import PanelAdmin from "./panelAdmin";
 
 function updateActiveAccountDisplayed(newAccount) {
   const accountAddressElements = DOM.elementsWithId("#active-account");
   accountAddressElements.forEach((node) => (node.textContent = newAccount));
-}
-
-function displayAdminPanelInfo(contract) {
-  DOM.elid("app-contract-address").textContent = contract.config.appAddress;
-  DOM.elid("data-contract-address").textContent = contract.config.dataAddress;
-
-  contract.isAppOperational((error, result) => {
-    const element = DOM.elid("app-operational-status");
-    const { text, color } = getOperationalDomValues(
-      error,
-      result,
-      "Operative",
-      "Inoperative"
-    );
-    element.textContent = text;
-    element.style.color = color;
-    DOM.elid("activate-app-contract").textContent =
-      error || !result ? "Activate" : "Deactivate";
-  });
-
-  contract.isDataOperational((error, result) => {
-    const element = DOM.elid("data-operational-status");
-    const { text, color } = getOperationalDomValues(
-      error,
-      result,
-      "Operative",
-      "Inoperative"
-    );
-    element.textContent = text;
-    element.style.color = color;
-    DOM.elid("activate-data-contract").textContent =
-      error || !result ? "Activate" : "Deactivate";
-  });
-
-  contract.isAppAuthorized((error, result) => {
-    const element = DOM.elid("app-authorized-status");
-    const { text, color } = getOperationalDomValues(
-      error,
-      result,
-      "Authorized",
-      "Unauthorized"
-    );
-    element.textContent = text;
-    element.style.color = color;
-    DOM.elid("authorize-app-contract").textContent =
-      error || !result ? "Authorize" : "Unauthorize";
-  });
 }
 
 function updateActiveAccountRoleDisplayed(nodeId, isOwner, error) {
@@ -80,18 +23,17 @@ function initAccountSelected(contract) {
 }
 
 (async () => {
-  let result = null;
-
   let contract = new Contract("localhost", () => {
-    displayAdminPanelInfo(contract);
     initAccountSelected(contract);
-
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", function (accounts) {
         contract.setActiveWalletAccount(accounts[0]);
         initAccountSelected(contract);
       });
     }
+
+    let panelAdmin = new PanelAdmin(contract);
+    panelAdmin.initialize();
 
     // User-submitted transaction
     // DOM.elid("fetch-airline").addEventListener("click", () => {
