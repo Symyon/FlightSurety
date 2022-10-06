@@ -49,6 +49,7 @@ contract FlightSuretyData {
   /*                                       EVENTS                                             */
   /********************************************************************************************/
   event UpdatedOperationalStatus(bool oldState, bool newState);
+  event UpdatedAppAuthorizationStatus(address appAddress, bool oldState, bool newState);
 
   /********************************************************************************************/
   /*                                       FUNCTION MODIFIERS                                 */
@@ -116,7 +117,9 @@ contract FlightSuretyData {
   }
 
   function setAuthorization(address _address, bool _authorized) external requireContractOwner {
+    bool oldState = authorizedCallers[_address];
     authorizedCallers[_address] = _authorized;
+    emit UpdatedAppAuthorizationStatus(_address, oldState, authorizedCallers[_address]);
   }
 
   function isAuthorized(address _address) external view returns (bool) {
