@@ -83,10 +83,6 @@ export default class Contract {
     });
   }
 
-  addListenerToDataStatusChange(callback) {
-    this.flightSuretyData.events.UpdatedOperationalStatus({}, callback);
-  }
-
   setDataOperatingStatus(status, callback) {
     let self = this;
     self.flightSuretyData.methods.setOperatingStatus(status).send({ from: self.owner }, (error, result) => {
@@ -94,11 +90,28 @@ export default class Contract {
     });
   }
 
+  addListenerToDataStatusChange(callback) {
+    this.flightSuretyData.events.UpdatedOperationalStatus({}, callback);
+  }
+
   isAppAuthorized(callback) {
     let self = this;
     self.flightSuretyData.methods.isAuthorized(self.appContractAddress).call({ from: self.owner }, (error, result) => {
       callback(error, result);
     });
+  }
+
+  setAppAuthorizationStatus(status, callback) {
+    let self = this;
+    self.flightSuretyData.methods
+      .setAuthorization(self.appContractAddress, status)
+      .send({ from: self.owner }, (error, result) => {
+        callback(error, result);
+      });
+  }
+
+  addListenerToAppAuthorizationChange(callback) {
+    this.flightSuretyData.events.UpdatedAppAuthorizationStatus({}, callback);
   }
 
   isAppOwner(callback) {

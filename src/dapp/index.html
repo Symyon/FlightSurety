@@ -38,24 +38,36 @@
           <div class="contract-info">
             <div class="contract-info-title">App Contract:</div>
             <div class="contract-info-address" id="app-contract-address">N/A</div>
-            <div class="title">Status</div>
             <div class="contract-status-cell">
-              <btn class="btn btn-primary btn-custom" id="activate-app-contract">Activate</btn>
+              <div class="contract-status-title">Status:</div>
               <div class="contract-status" id="app-operational-status">Inoperative</div>
-            </div>
-            <div class="contract-status-cell">
-              <btn class="btn btn-primary btn-custom" id="authorize-app-contract">Authorize</btn>
-              <div></div>
-              <div class="contract-status" id="app-authorized-status">Unauthorized</div>
+              <div style="flex: 1"></div>
+              <btn class="btn btn-primary btn-custom" id="activate-app-contract">Activate</btn>
             </div>
           </div>
           <div class="contract-info">
             <div class="contract-info-title">Data Contract:</div>
             <div class="contract-info-address" id="data-contract-address">N/A</div>
-            <div class="title">Status</div>
             <div class="contract-status-cell">
-              <btn class="btn btn-primary btn-custom" id="activate-data-contract">Activate</btn>
+              <div class="contract-status-title">Status:</div>
               <div class="contract-status" id="data-operational-status">Inoperative</div>
+              <div style="flex: 1"></div>
+              <btn class="btn btn-primary btn-custom" id="activate-data-contract">Activate</btn>
+            </div>
+            <div style="margin-top: 16px"></div>
+            <div class="contract-status-cell">
+              <div class="title-medium">App contract:</div>
+              <div class="contract-status" id="app-authorized-status">Unauthorized</div>
+            </div>
+
+            <div class="contract-status-cell">
+              <div class="title-medium">App address:</div>
+              <div class="title-medium value" id="app-contract-address">N/A</div>
+            </div>
+            <div class="contract-status-cell">
+              <div style="flex: 1"></div>
+              <btn class="btn btn-primary btn-custom" id="authorize-app-contract">Authorize</btn>
+              <btn class="btn btn-primary btn-custom" id="unauthorize-app-contract">Unauthorize</btn>
             </div>
           </div>
         </div>

@@ -165,6 +165,11 @@ nav {
   min-width: 128px;
 }
 
+.contract-status-title {
+  font-size: 1.25rem;
+  margin-right: 12px;
+}
+
 .title-medium {
   min-width: 128px;
   font-size: 1.25rem;

@@ -35,7 +35,25 @@ export default class PanelAdmin {
     });
   }
 
-  addDataContractStatusListener() {
+  authorizeAppContractAuthorizationStatus() {
+    this.contract.setAppAuthorizationStatus(true, (error, result) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+    });
+  }
+
+  unauthorizeAppContractAuthorizationStatus() {
+    this.contract.setAppAuthorizationStatus(false, (error, result) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+    });
+  }
+
+  addDataContractStatusListeners() {
     const self = this;
     this.contract.addListenerToDataStatusChange((error, data) => {
       if (error) {
@@ -43,6 +61,15 @@ export default class PanelAdmin {
         return;
       }
       self.updateDataOperationalStatus(data.returnValues[1]);
+    });
+    this.contract.addListenerToAppAuthorizationChange((error, data) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (data.returnValues[0] === self.contract.config.appAddress) {
+        self.updateAppAuthorizationStatus(data.returnValues[2]);
+      }
     });
   }
 
@@ -59,7 +86,6 @@ export default class PanelAdmin {
     const { text, color } = this.getOperationalDomValues(isActive, 'Authorized', 'Unauthorized');
     element.textContent = text;
     element.style.color = color;
-    DOM.elid('authorize-app-contract').textContent = isActive ? 'Unauthorize' : 'Authorize';
   }
 
   switchAppContractOperationalStatus() {
@@ -90,7 +116,8 @@ export default class PanelAdmin {
   }
 
   initialize() {
-    DOM.elid('app-contract-address').textContent = this.contract.config.appAddress;
+    const appAddressElements = DOM.elementsWithId('#app-contract-address');
+    appAddressElements.forEach((node) => (node.textContent = this.contract.config.appAddress));
     DOM.elid('data-contract-address').textContent = this.contract.config.dataAddress;
 
     const self = this;
@@ -100,15 +127,23 @@ export default class PanelAdmin {
     this.addAppContractStatusListener();
 
     this.contract.isDataOperational((error, result) => self.updateDataOperationalStatus(error ? false : result));
-    this.addDataContractStatusListener();
+    this.addDataContractStatusListeners();
     this.contract.isAppAuthorized((error, result) => self.updateAppAuthorizationStatus(error ? false : result));
 
     DOM.elid('activate-app-contract').addEventListener('click', () => {
-      self.switchAppContractOperationalStatus();
+      this.switchAppContractOperationalStatus();
     });
 
     DOM.elid('activate-data-contract').addEventListener('click', () => {
-      self.switchDataContractOperationalStatus();
+      this.switchDataContractOperationalStatus();
+    });
+
+    DOM.elid('authorize-app-contract').addEventListener('click', () => {
+      this.authorizeAppContractAuthorizationStatus();
+    });
+
+    DOM.elid('unauthorize-app-contract').addEventListener('click', () => {
+      self.unauthorizeAppContractAuthorizationStatus();
     });
   }
 }
