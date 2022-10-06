@@ -11,20 +11,47 @@ export default class PanelAdmin {
     return { text, color };
   };
 
-  updateAppOperationalStatus(isActive) {
-    const element = DOM.elid('app-operational-status');
-    const { text, color } = this.getOperationalDomValues(isActive, 'Operative', 'Inoperative');
-    element.textContent = text;
-    element.style.color = color;
-    DOM.elid('activate-app-contract').textContent = isActive ? 'Deactivate' : 'Activate';
-  }
-
   updateDataOperationalStatus(isActive) {
     const element = DOM.elid('data-operational-status');
     const { text, color } = this.getOperationalDomValues(isActive, 'Operative', 'Inoperative');
     element.textContent = text;
     element.style.color = color;
     DOM.elid('activate-data-contract').textContent = isActive ? 'Deactivate' : 'Activate';
+  }
+
+  switchDataContractOperationalStatus() {
+    const self = this;
+    this.contract.isDataOperational((err, status) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      self.contract.setDataOperatingStatus(!status, (error, result) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+      });
+    });
+  }
+
+  addDataContractStatusListener() {
+    const self = this;
+    this.contract.addListenerToDataStatusChange((error, data) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      self.updateDataOperationalStatus(data.returnValues[1]);
+    });
+  }
+
+  updateAppOperationalStatus(isActive) {
+    const element = DOM.elid('app-operational-status');
+    const { text, color } = this.getOperationalDomValues(isActive, 'Operative', 'Inoperative');
+    element.textContent = text;
+    element.style.color = color;
+    DOM.elid('activate-app-contract').textContent = isActive ? 'Deactivate' : 'Activate';
   }
 
   updateAppAuthorizationStatus(isActive) {
@@ -42,13 +69,23 @@ export default class PanelAdmin {
         console.log(err);
         return;
       }
-      self.contract.setOperatingStatus(!status, (error, result) => {
+      self.contract.setAppOperatingStatus(!status, (error, result) => {
         if (error) {
           console.log(error);
           return;
         }
-        self.updateAppOperationalStatus(error ? false : result);
       });
+    });
+  }
+
+  addAppContractStatusListener() {
+    const self = this;
+    this.contract.addListenerToAppStatusChange((error, data) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      self.updateAppOperationalStatus(data.returnValues[1]);
     });
   }
 
@@ -58,16 +95,20 @@ export default class PanelAdmin {
 
     const self = this;
     this.contract.isAppOperational((error, result) => {
-      console.log(error, result);
       self.updateAppOperationalStatus(error ? false : result);
     });
+    this.addAppContractStatusListener();
 
     this.contract.isDataOperational((error, result) => self.updateDataOperationalStatus(error ? false : result));
-
+    this.addDataContractStatusListener();
     this.contract.isAppAuthorized((error, result) => self.updateAppAuthorizationStatus(error ? false : result));
 
     DOM.elid('activate-app-contract').addEventListener('click', () => {
       self.switchAppContractOperationalStatus();
+    });
+
+    DOM.elid('activate-data-contract').addEventListener('click', () => {
+      self.switchDataContractOperationalStatus();
     });
   }
 }

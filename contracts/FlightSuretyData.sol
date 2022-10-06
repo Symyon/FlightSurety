@@ -46,6 +46,11 @@ contract FlightSuretyData {
   }
 
   /********************************************************************************************/
+  /*                                       EVENTS                                             */
+  /********************************************************************************************/
+  event UpdatedOperationalStatus(bool oldState, bool newState);
+
+  /********************************************************************************************/
   /*                                       FUNCTION MODIFIERS                                 */
   /********************************************************************************************/
 
@@ -105,7 +110,9 @@ contract FlightSuretyData {
    */
   function setOperatingStatus(bool mode) external requireContractOwner {
     require(mode != operational, 'Operational status cannot be set to the same value');
+    bool oldState = operational;
     operational = mode;
+    emit UpdatedOperationalStatus(oldState, operational);
   }
 
   function setAuthorization(address _address, bool _authorized) external requireContractOwner {

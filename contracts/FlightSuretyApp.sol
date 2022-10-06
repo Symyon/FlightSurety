@@ -45,6 +45,11 @@ contract FlightSuretyApp {
   }
 
   /********************************************************************************************/
+  /*                                       EVENTS                                             */
+  /********************************************************************************************/
+  event UpdatedOperationalStatus(bool oldState, bool newState);
+
+  /********************************************************************************************/
   /*                                       FUNCTION MODIFIERS                                 */
   /********************************************************************************************/
 
@@ -72,7 +77,9 @@ contract FlightSuretyApp {
 
   function setOperatingStatus(bool mode) external requireContractOwner returns (bool) {
     require(mode != operational, 'Operational status cannot be set to the same value');
+    bool oldState = operational;
     operational = mode;
+    emit UpdatedOperationalStatus(oldState, operational);
   }
 
   /********************************************************************************************/
