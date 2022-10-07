@@ -1,19 +1,14 @@
 import DOM from './dom';
+import { getDomValuesWithStyle } from './utils';
 
 export default class PanelAdmin {
   constructor(contract) {
     this.contract = contract;
   }
 
-  getOperationalDomValues = (value, positiveValue, negativeValue) => {
-    const text = value ? positiveValue : negativeValue;
-    const color = value ? 'green' : '#d14343';
-    return { text, color };
-  };
-
   updateDataOperationalStatus(isActive) {
     const element = DOM.elid('data-operational-status');
-    const { text, color } = this.getOperationalDomValues(isActive, 'Operative', 'Inoperative');
+    const { text, color } = getDomValuesWithStyle(isActive, 'Operative', 'Inoperative');
     element.textContent = text;
     element.style.color = color;
     DOM.elid('activate-data-contract').textContent = isActive ? 'Deactivate' : 'Activate';
@@ -75,7 +70,7 @@ export default class PanelAdmin {
 
   updateAppOperationalStatus(isActive) {
     const element = DOM.elid('app-operational-status');
-    const { text, color } = this.getOperationalDomValues(isActive, 'Operative', 'Inoperative');
+    const { text, color } = getDomValuesWithStyle(isActive, 'Operative', 'Inoperative');
     element.textContent = text;
     element.style.color = color;
     DOM.elid('activate-app-contract').textContent = isActive ? 'Deactivate' : 'Activate';
@@ -83,7 +78,7 @@ export default class PanelAdmin {
 
   updateAppAuthorizationStatus(isActive) {
     const element = DOM.elid('app-authorized-status');
-    const { text, color } = this.getOperationalDomValues(isActive, 'Authorized', 'Unauthorized');
+    const { text, color } = getDomValuesWithStyle(isActive, 'Authorized', 'Unauthorized');
     element.textContent = text;
     element.style.color = color;
   }
