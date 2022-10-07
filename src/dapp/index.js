@@ -3,6 +3,7 @@ import Contract from './contract';
 import './flightsurety.css';
 import PanelAdmin from './panelAdmin';
 import PanelAirlines from './panelAirlines';
+import { getDomValuesWithStyle } from './utils';
 
 function updateActiveAccountDisplayed(newAccount) {
   const accountAddressElements = DOM.elementsWithId('#active-account');
@@ -10,7 +11,10 @@ function updateActiveAccountDisplayed(newAccount) {
 }
 
 function updateActiveAccountRoleDisplayed(nodeId, isOwner, error) {
-  DOM.elid(nodeId).textContent = error ? 'N/A' : isOwner ? 'Yes' : 'No';
+  const { text, color } = getDomValuesWithStyle(isOwner, 'Yes', 'No');
+  const element = DOM.elid(nodeId);
+  element.textContent = text;
+  element.style.color = color;
 }
 
 function initAccountSelected(contract) {

@@ -14,6 +14,7 @@ export default class Contract {
     this.dataContractAddress = this.config.dataAddress;
     this.getActiveWalletAccount.bind(this);
     this.setActiveWalletAccount.bind(this);
+    this.gasLimit = 2000000;
   }
 
   getActiveWalletAccount() {
@@ -85,9 +86,11 @@ export default class Contract {
 
   setDataOperatingStatus(status, callback) {
     let self = this;
-    self.flightSuretyData.methods.setOperatingStatus(status).send({ from: self.owner }, (error, result) => {
-      callback(error, result);
-    });
+    self.flightSuretyData.methods
+      .setOperatingStatus(status)
+      .send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
+        callback(error, result);
+      });
   }
 
   addListenerToDataStatusChange(callback) {
@@ -105,7 +108,7 @@ export default class Contract {
     let self = this;
     self.flightSuretyData.methods
       .setAuthorization(self.appContractAddress, status)
-      .send({ from: self.owner }, (error, result) => {
+      .send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
         callback(error, result);
       });
   }
@@ -134,9 +137,11 @@ export default class Contract {
 
   setAppOperatingStatus(status, callback) {
     let self = this;
-    self.flightSuretyApp.methods.setOperatingStatus(status).send({ from: self.owner }, (error, result) => {
-      callback(error, result);
-    });
+    self.flightSuretyApp.methods
+      .setOperatingStatus(status)
+      .send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
+        callback(error, result);
+      });
   }
 
   isAirlineRegistered(callback) {
@@ -146,55 +151,11 @@ export default class Contract {
     });
   }
 
-  fetchAirlineInfo(airline, callback) {
+  fetchAirlineInfo(address, callback) {
     let self = this;
-    console.log('we are here contract info', airline);
-    console.log('owner is:', self.owner);
-    console.log('Testing contract', this.appContractAddress);
-
-    self.flightSuretyData.methods.isAuthorized(this.appContractAddress).call({ from: self.owner }, (error, result) => {
-      if (error) {
-        console.log('isAuthorized error is:', error);
-      } else {
-        console.log('isAuthorized', result);
-      }
+    self.flightSuretyApp.methods.getAirlineInfo(address).call({ from: self.owner }, (error, result) => {
+      callback(error, result);
     });
-
-    // this.flightSuretyData.methods
-    //   .setAuthorization(this.appContractAddress, true)
-    //   .send({ from: self.owner }, (error, result) => {
-    //     if (error) {
-    //       console.log("setAuthorization error is:", error);
-    //     } else {
-    //       console.log("setAuthorization", result);
-    //       self.flightSuretyData.methods
-    //         .isAuthorized(this.appContractAddress)
-    //         .call({ from: self.owner }, (error, result) => {
-    //           if (error) {
-    //             console.log("isAuthorized error is:", error);
-    //           } else {
-    //             console.log("isAuthorized", result);
-    //           }
-    //         });
-    //     }
-    //   });
-
-    // this.flightSuretyData.methods
-    //   .setAuthorization(self.appContractAddress, true)
-    //   .call({ from: self.owner }, (error, result) => {
-    //     if (error) {
-    //       console.log("setAuthorization error is:", error);
-    //     } else {
-    //       console.log("setAuthorization", result);
-
-    //     }
-    //   });
-    // self.flightSuretyApp.methods
-    //   .getAirlineInfo(airline)
-    //   .call({ from: self.owner }, (error, result) => {
-    //     console.log("fetchAirlineInfo", error, result);
-    //     // callback(error, payload);
-    //   });
   }
 
   fetchFlightStatus(flight, callback) {
@@ -206,7 +167,7 @@ export default class Contract {
     };
     self.flightSuretyApp.methods
       .fetchFlightStatus(payload.airline, payload.flight, payload.timestamp)
-      .send({ from: self.owner }, (error, result) => {
+      .send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
         callback(error, payload);
       });
   }

@@ -36,7 +36,7 @@ contract FlightSuretyData {
   constructor(address firstAirline) public {
     contractOwner = msg.sender;
     airlines[firstAirline] = Airline({
-      name: 'Owner Airline',
+      name: 'Default Airline',
       airlineAddress: firstAirline,
       funds: 0,
       isRegistered: true,
@@ -173,30 +173,30 @@ contract FlightSuretyData {
     return airlines[_address].isRegistered;
   }
 
-  // function getAirlineInfo(address _address)
-  //     external
-  //     view
-  //     returns (
-  //         string memory,
-  //         address,
-  //         uint256,
-  //         bool,
-  //         bool
-  //     )
-  // {
-  //     return (
-  //         airlines[_address].name,
-  //         airlines[_address].airlineAddress,
-  //         airlines[_address].funds,
-  //         airlines[_address].isRegistered,
-  //         airlines[_address].isFunded
-  //     );
-  // }
-
   function fundAirline(address _address) external payable requiredAuthorized requireIsOperational {
     require(airlines[_address].isRegistered == true, 'Airline is not registered');
 
     airlines[_address].funds += msg.value;
+  }
+
+  function getAirlineInfo(address _address)
+    external
+    view
+    returns (
+      string memory,
+      address,
+      uint256,
+      bool,
+      bool
+    )
+  {
+    return (
+      airlines[_address].name,
+      airlines[_address].airlineAddress,
+      airlines[_address].funds,
+      airlines[_address].isRegistered,
+      airlines[_address].isFunded
+    );
   }
 
   /**

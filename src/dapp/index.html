@@ -91,9 +91,9 @@
         <div>
           <div class="title-big">Register new airline</div>
           <div class="row-custom">
-            <input class="input-custom" type="text" id="flight-number" />
-            <btn class="btn btn-primary btn-custom" id="submit-oracle">Register</btn>
-            <div class="contract-status">Available for registered airlines only</div>
+            <input class="input-custom" type="text" id="new-airline-address" placeholder="Address" />
+            <input class="input-custom" type="text" id="new-airline-name" placeholder="Name" />
+            <btn class="btn btn-primary btn-custom" id="submit-airline-register">Register</btn>
           </div>
         </div>
 
@@ -109,35 +109,35 @@
         <div>
           <div class="title-big">Get airlines details</div>
           <div class="row-custom">
-            <input class="input-custom" type="text" id="flight-number" />
-            <btn class="btn btn-primary btn-custom" id="submit-oracle">Fetch</btn>
+            <input class="input-custom" type="text" id="fetch-airline-address-input" placeholder="Address" />
+            <btn class="btn btn-primary btn-custom" id="fetch-airline">Fetch</btn>
           </div>
         </div>
 
         <div class="panel">
           <div class="row-custom">
             <div class="title">Name:</div>
-            <div class="value">...</div>
+            <div class="value" id="fetch-airline-name">...</div>
           </div>
 
           <div class="row-custom">
             <div class="title">Address:</div>
-            <div class="value">...</div>
+            <div class="value" id="fetch-airline-address">...</div>
           </div>
 
           <div class="row-custom">
             <div class="title">Funds:</div>
-            <div class="value">...</div>
+            <div class="value" id="fetch-airline-funds">...</div>
           </div>
 
           <div class="row-custom">
             <div class="title">Registered:</div>
-            <div class="value">...</div>
+            <div class="value" id="fetch-airline-registered">...</div>
           </div>
 
           <div class="row-custom">
             <div class="title">Funded:</div>
-            <div class="value">...</div>
+            <div class="value" id="fetch-airline-funded">...</div>
           </div>
         </div>
       </div>

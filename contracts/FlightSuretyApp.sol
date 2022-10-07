@@ -114,22 +114,14 @@ contract FlightSuretyApp {
     public
     view
     returns (
-      string memory name // address airlineAddress,
+      string memory,
+      address,
+      uint256,
+      bool,
+      bool
     )
-  // uint256 funds,
-  // bool isRegistered,
-  // bool isFunded
   {
-    name = flightSuretyData.airlines(_address).name;
-    // airlineAddress = flightSuretyData.airlines(_address).airlineAddress;
-    // funds = flightSuretyData.airlines(_address).funds;
-    // isRegistered = flightSuretyData.airlines(_address).isRegistered;
-    // isFunded = flightSuretyData.airlines(_address).isFunded;
-
-    // name = "My name is what?";
-
-    return name;
-    // return (name, airlineAddress, funds, isRegistered, isFunded);
+    return flightSuretyData.getAirlineInfo(_address);
   }
 
   /**
@@ -325,14 +317,14 @@ contract FlightSuretyData {
 
   function fundAirline(address _address) external payable;
 
-  // function getAirlineInfo(address _address)
-  //     external
-  //     view
-  //     returns (
-  //         bytes32,
-  //         address,
-  //         uint256,
-  //         bool,
-  //         bool
-  //     );
+  function getAirlineInfo(address _address)
+    external
+    view
+    returns (
+      string memory,
+      address,
+      uint256,
+      bool,
+      bool
+    );
 }
