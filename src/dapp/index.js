@@ -2,6 +2,7 @@ import DOM from './dom';
 import Contract from './contract';
 import './flightsurety.css';
 import PanelAdmin from './panelAdmin';
+import PanelAirlines from './panelAirlines';
 
 function updateActiveAccountDisplayed(newAccount) {
   const accountAddressElements = DOM.elementsWithId('#active-account');
@@ -14,9 +15,11 @@ function updateActiveAccountRoleDisplayed(nodeId, isOwner, error) {
 
 function initAccountSelected(contract) {
   updateActiveAccountDisplayed(contract.getActiveWalletAccount());
+
   contract.isAppOwner((error, isAppOwner) => {
     updateActiveAccountRoleDisplayed('contract-owner', isAppOwner, error);
   });
+
   contract.isDataOwner((error, isDataOwner) => {
     updateActiveAccountRoleDisplayed('data-owner', isDataOwner, error);
   });
@@ -33,7 +36,9 @@ function initAccountSelected(contract) {
     }
 
     let panelAdmin = new PanelAdmin(contract);
+    let panelAirlines = new PanelAirlines(contract);
     panelAdmin.initialize();
+    panelAirlines.initialize();
 
     // User-submitted transaction
     // DOM.elid("fetch-airline").addEventListener("click", () => {

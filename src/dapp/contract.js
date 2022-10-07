@@ -139,6 +139,13 @@ export default class Contract {
     });
   }
 
+  isAirlineRegistered(callback) {
+    let self = this;
+    self.flightSuretyApp.methods.isAirlineRegistered(self.owner).call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
+  }
+
   fetchAirlineInfo(airline, callback) {
     let self = this;
     console.log('we are here contract info', airline);

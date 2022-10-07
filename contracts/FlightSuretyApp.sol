@@ -106,6 +106,10 @@ contract FlightSuretyApp {
     flightSuretyData.fundAirline.value(msg.value)(_address);
   }
 
+  function isAirlineRegistered(address _address) public view returns (bool) {
+    return flightSuretyData.isAirlineRegistered(_address);
+  }
+
   function getAirlineInfo(address _address)
     public
     view
@@ -316,6 +320,8 @@ contract FlightSuretyData {
     string calldata _name,
     uint256 _minVotes
   ) external;
+
+  function isAirlineRegistered(address _airline) external view returns (bool);
 
   function fundAirline(address _address) external payable;
 
