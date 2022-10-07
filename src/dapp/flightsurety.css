@@ -129,6 +129,10 @@ nav {
   margin: 16px 0px;
 }
 
+.margin8 { 
+  margin: 8px 0px;
+}
+
 .input-custom {
   color: #2f2f2f;
   border-radius: 12px;

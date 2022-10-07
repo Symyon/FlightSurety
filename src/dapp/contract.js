@@ -151,10 +151,29 @@ export default class Contract {
     });
   }
 
+  fundAirline(address, value, callback) {
+    let self = this;
+    self.flightSuretyApp.methods
+      .fundAirline(address)
+      .send(
+        { from: self.owner, value: this.web3.utils.toWei(value, 'ether'), gasLimit: this.gasLimit },
+        (error, result) => {
+          callback(error, result);
+        }
+      );
+  }
+
   fetchAirlineInfo(address, callback) {
     let self = this;
     self.flightSuretyApp.methods.getAirlineInfo(address).call({ from: self.owner }, (error, result) => {
-      callback(error, result);
+      const airline = {
+        name: result[0] ? result[0] : 'N/A',
+        address: result[1] ? result[1] : 'N/A',
+        funds: result[2] ? this.web3.utils.fromWei(result[2], 'ether') : 'N/A',
+        isRegistered: result[3],
+        isFunded: result[4],
+      };
+      callback(error, airline);
     });
   }
 

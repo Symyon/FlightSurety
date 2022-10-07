@@ -103,7 +103,7 @@ contract FlightSuretyApp {
   }
 
   function fundAirline(address _address) external payable requireIsOperational {
-    flightSuretyData.fundAirline.value(msg.value)(_address);
+    flightSuretyData.fundAirline.value(msg.value)(_address, airlineFundsRequirement);
   }
 
   function isAirlineRegistered(address _address) public view returns (bool) {
@@ -315,7 +315,7 @@ contract FlightSuretyData {
 
   function isAirlineRegistered(address _airline) external view returns (bool);
 
-  function fundAirline(address _address) external payable;
+  function fundAirline(address _address, uint256 _fundingRequired) external payable;
 
   function getAirlineInfo(address _address)
     external

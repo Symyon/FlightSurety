@@ -173,10 +173,16 @@ contract FlightSuretyData {
     return airlines[_address].isRegistered;
   }
 
-  function fundAirline(address _address) external payable requiredAuthorized requireIsOperational {
+  function fundAirline(address _address, uint256 fundingRequired)
+    external
+    payable
+    requiredAuthorized
+    requireIsOperational
+  {
     require(airlines[_address].isRegistered == true, 'Airline is not registered');
 
     airlines[_address].funds += msg.value;
+    airlines[_address].isFunded = airlines[_address].funds >= fundingRequired;
   }
 
   function getAirlineInfo(address _address)
