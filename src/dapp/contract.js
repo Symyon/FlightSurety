@@ -14,7 +14,7 @@ export default class Contract {
     this.dataContractAddress = this.config.dataAddress;
     this.getActiveWalletAccount.bind(this);
     this.setActiveWalletAccount.bind(this);
-    this.gasLimit = 2000000;
+    this.gasLimit = 5000000;
   }
 
   getActiveWalletAccount() {
@@ -149,6 +149,15 @@ export default class Contract {
     self.flightSuretyApp.methods.isAirlineRegistered(self.owner).call({ from: self.owner }, (error, result) => {
       callback(error, result);
     });
+  }
+
+  registerAirline(address, name, callback) {
+    let self = this;
+    self.flightSuretyApp.methods
+      .registerAirline(address, name)
+      .send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
+        callback(error, result);
+      });
   }
 
   fundAirline(address, value, callback) {

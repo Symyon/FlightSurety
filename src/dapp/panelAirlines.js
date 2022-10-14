@@ -36,6 +36,17 @@ export default class PanelAirlines {
       });
     }
 
+    DOM.elid('submit-airline-register').addEventListener('click', () => {
+      const address = DOM.elid('new-airline-address').value;
+      const name = DOM.elid('new-airline-name').value;
+      this.contract.registerAirline(address, name, (error, result) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+      });
+    });
+
     DOM.elid('fund-airline').addEventListener('click', () => {
       const address = DOM.elid('fund-airline-address').value;
       const amount = DOM.elid('fund-airline-amount').value;

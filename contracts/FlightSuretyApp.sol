@@ -29,7 +29,8 @@ contract FlightSuretyApp {
   address private contractOwner; // Account used to deploy contract
   bool private operational = true; // Blocks all state changes throughout the contract if false
   FlightSuretyData flightSuretyData;
-  uint256 multipartySplit = 2; // Airlines percentage required to vote for a new airline to be registered (2 = 50%)
+  uint256 private constant MAX_COUNT_NO_MULTISIG_REQ = 4;
+  uint16 MULTI_PARTY_SPLIT = 2; // Airlines percentage required to vote for a new airline to be registered (2 = 50%)
 
   struct Flight {
     bool isRegistered;
@@ -96,10 +97,18 @@ contract FlightSuretyApp {
     returns (bool success, uint256 votes)
   {
     uint256 registeredCount = flightSuretyData.getRegisteredAirlinesCount();
-    uint256 minVotes = registeredCount < 4 ? 1 : registeredCount / multipartySplit;
+    uint256 minVotes = registeredCount < MAX_COUNT_NO_MULTISIG_REQ ? 1 : registeredCount / MULTI_PARTY_SPLIT;
 
-    flightSuretyData.registerAirline(_address, _name, minVotes);
-    return (true, 0);
+    return flightSuretyData.registerAirline(_address, _name, minVotes);
+  }
+
+  function unregisterAirline(address _address)
+    external
+    requireIsOperational
+    requireContractOwner
+    returns (bool success)
+  {
+    return flightSuretyData.unregisterAirline(_address);
   }
 
   function fundAirline(address _address) external payable requireIsOperational {
@@ -311,7 +320,9 @@ contract FlightSuretyData {
     address _address,
     string calldata _name,
     uint256 _minVotes
-  ) external;
+  ) external returns (bool, uint256);
+
+  function unregisterAirline(address _address) external returns (bool);
 
   function isAirlineRegistered(address _airline) external view returns (bool);
 

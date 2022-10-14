@@ -22,8 +22,11 @@ contract FlightSuretyData {
   mapping(address => Airline) public airlines;
   uint256 private registeredAirlinesCounter = 0;
 
-  mapping(address => bool) private multiCalls;
-  address[] private multiCallsAddresses;
+  struct Vote {
+    mapping(address => bool) votedMembers;
+    address[] votedMembersAddresses;
+  }
+  mapping(address => Vote) private votes;
 
   /********************************************************************************************/
   /*                                       EVENT DEFINITIONS                                  */
@@ -139,13 +142,19 @@ contract FlightSuretyData {
     address _address,
     string calldata _name,
     uint256 _minVotes
-  ) external requiredAuthorized requireRegisteredAndFunded requireIsOperational {
+  )
+    external
+    requiredAuthorized
+    requireRegisteredAndFunded
+    requireIsOperational
+    returns (bool success, uint256 aquiredVotes)
+  {
     require(airlines[_address].isRegistered == false, 'Airline is already registered');
 
-    bool isDuplicate = multiCalls[_address];
+    bool isDuplicate = votes[_address].votedMembers[tx.origin];
     require(!isDuplicate, 'This Airline has already voted to register');
 
-    if (multiCallsAddresses.length > _minVotes - 1) {
+    if (votes[_address].votedMembersAddresses.length + 1 >= _minVotes) {
       airlines[_address] = Airline({
         name: _name,
         airlineAddress: _address,
@@ -155,14 +164,24 @@ contract FlightSuretyData {
       });
       registeredAirlinesCounter = registeredAirlinesCounter.add(1);
 
-      for (uint256 i = 0; i < multiCallsAddresses.length; i++) {
-        delete multiCalls[multiCallsAddresses[i]];
+      for (uint256 i = 0; i < votes[_address].votedMembersAddresses.length; i++) {
+        address votedMember = votes[_address].votedMembersAddresses[i];
+        delete votes[_address].votedMembers[votedMember];
       }
-      multiCallsAddresses = new address[](0);
+      votes[_address].votedMembersAddresses = new address[](0);
+      return (true, 0);
     } else {
-      multiCalls[_address] = true;
-      multiCallsAddresses.push(_address);
+      votes[_address].votedMembers[tx.origin] = true;
+      votes[_address].votedMembersAddresses.push(tx.origin);
+      return (false, votes[_address].votedMembersAddresses.length);
     }
+  }
+
+  function unregisterAirline(address _address) external requiredAuthorized requireIsOperational returns (bool success) {
+    require(airlines[_address].isRegistered == true, 'Airline is not registered');
+    delete airlines[_address];
+    registeredAirlinesCounter = registeredAirlinesCounter.sub(1);
+    return true;
   }
 
   function getRegisteredAirlinesCount() external view returns (uint256) {
