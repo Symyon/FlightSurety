@@ -62,11 +62,11 @@ contract('Flight Surety Tests', async (accounts) => {
 
   it('(airline) cannot register an Airline using registerAirline() if it is not funded', async () => {
     // ARRANGE
-    let newAirline = accounts[2];
+    const newAirline = accounts[2];
 
     // ACT
     try {
-      await config.flightSuretyApp.registerAirline(newAirline, 'Airline 2', {
+      await config.flightSuretyApp.registerAirline(newAirline, 'Airline-2', {
         from: config.firstAirline,
       });
     } catch (e) {}
@@ -74,6 +74,83 @@ contract('Flight Surety Tests', async (accounts) => {
 
     // ASSERT
     assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
+  });
+
+  it('(airline) cannot register an Airline using registerAirline() if caller is not a registered airline', async () => {
+    // ARRANGE
+    const newAirline = accounts[2];
+
+    // ACT
+    try {
+      await config.flightSuretyApp.fundAirline({ from: config.owner, value: web3.utils.toWei('10', 'ether') });
+      await config.flightSuretyApp.registerAirline(newAirline, 'Airline 2', {
+        from: config.firstAirline,
+      });
+    } catch (e) {}
+    let result = await config.flightSuretyData.isAirlineRegistered.call(newAirline);
+
+    // ASSERT
+    assert.equal(result, false, 'Only existing airline may register a new airline');
+  });
+
+  it('(airline) can register a new airline using registerAirline() if caller is a funded airline and it is the only one ', async () => {
+    // ARRANGE
+    const newAirline = accounts[2];
+
+    // ACT
+    try {
+      await config.flightSuretyApp.fundAirline(config.firstAirline, {
+        from: config.owner,
+        value: web3.utils.toWei('10', 'ether'),
+      });
+      await config.flightSuretyApp.registerAirline(newAirline, 'Airline 2', {
+        from: config.firstAirline,
+      });
+    } catch (e) {}
+    let result = await config.flightSuretyData.isAirlineRegistered.call(newAirline);
+
+    // ASSERT
+    assert.equal(
+      result,
+      true,
+      'Registered and funded airline should able to register a new airline by itslef if it is the only one'
+    );
+
+    await config.flightSuretyApp.unregisterAirline(newAirline, { from: config.owner });
+  });
+
+  it('(airline) registration of fifth and subsequent airlines requires multi-party consensus of 50% of registered airlines', async () => {
+    // ARRANGE
+    const newAirlines = [config.firstAirline, accounts[2], accounts[3], accounts[4], accounts[5]];
+
+    // ACT
+    const fundAirline = async (airline) => {
+      await config.flightSuretyApp.fundAirline(airline, {
+        from: config.owner,
+        value: web3.utils.toWei('10', 'ether'),
+      });
+    };
+
+    const registerAirline = async (airline, name, from) => {
+      await config.flightSuretyApp.registerAirline(airline, name, { from });
+    };
+
+    try {
+      await fundAirline(config.firstAirline);
+
+      for (let i = 1; i < newAirlines.length - 1; i++) {
+        await registerAirline(newAirlines[i], `Airline ${i}`, newAirlines[i - 1]);
+        await fundAirline(newAirlines[i]);
+      }
+
+      for (let i = 0; i < newAirlines.length - 1; i++) {
+        await registerAirline(newAirlines[newAirlines.length - 1], `Airline ${newAirlines.length}`, newAirlines[i]);
+      }
+    } catch (e) {}
+    let result = await config.flightSuretyData.isAirlineRegistered.call(newAirlines[newAirlines.length - 1]);
+
+    // ASSERT
+    assert.equal(result, true, 'Fifth airline was not registered');
   });
 
   it('can authorize another app contract', async () => {
@@ -87,10 +164,6 @@ contract('Flight Surety Tests', async (accounts) => {
 });
 
 //TEst required
-// First airline is registered when contract is deployed.
-// Only existing airline may register a new airline until there are at least four airlines registered
-// Registration of fifth and subsequent airlines requires multi-party consensus of 50% of registered airlines
-// Airline can be registered, but does not participate in contract until it submits funding of 10 ether
 // Passengers may pay up to 1 ether for purchasing flight insurance.
 // If flight is delayed due to airline fault, passenger receives credit of 1.5X the amount they paid
 // Passenger can withdraw any funds owed to them as a result of receiving credit for insurance payout
