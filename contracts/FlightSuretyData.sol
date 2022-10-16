@@ -28,6 +28,19 @@ contract FlightSuretyData {
   }
   mapping(address => Vote) private votes;
 
+  struct Flight {
+    bool isRegistered;
+    uint8 statusCode;
+    uint256 updatedTimestamp;
+    address airline;
+    string origin;
+    string destination;
+    uint256 takeoffTime;
+    uint256 landingTime;
+  }
+  mapping(bytes32 => Flight) private flights;
+  bytes32[] private registeredFlights;
+
   /********************************************************************************************/
   /*                                       EVENT DEFINITIONS                                  */
   /********************************************************************************************/
@@ -222,6 +235,40 @@ contract FlightSuretyData {
       airlines[_address].isRegistered,
       airlines[_address].isFunded
     );
+  }
+
+  /**
+   * @dev Register a future flight for insuring.
+   *
+   */
+  function registerFlight(
+    bytes32 _flightKey,
+    string calldata _name,
+    string calldata _origin,
+    string calldata _destination,
+    uint256 _takeoffTime,
+    uint256 _landingTime
+  ) external requireIsOperational requireRegisteredAndFunded returns (bool success) {
+    require(flights[_flightKey].isRegistered == false, 'Flight is already registered');
+
+    flights[_flightKey] = Flight({
+      isRegistered: true,
+      statusCode: 0,
+      updatedTimestamp: now,
+      airline: msg.sender,
+      origin: _origin,
+      destination: _destination,
+      takeoffTime: _takeoffTime,
+      landingTime: _landingTime
+    });
+
+    registeredFlights.push(_flightKey);
+
+    return true;
+  }
+
+  function getRegisteredFlights() external view returns (bytes32[] memory) {
+    return registeredFlights;
   }
 
   /**

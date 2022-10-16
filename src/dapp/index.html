@@ -100,7 +100,7 @@
         <div>
           <div class="title-big">Fund airline</div>
           <div class="row-custom">
-            <input class="input-custom" type="text" id="fund-airline-address" />
+            <input class="input-custom" type="text" id="fund-airline-address" placeholder="Address" />
             <input class="input-amount" type="text" id="fund-airline-amount" placeholder="0.00" />
             <div class="title-medium">ETH</div>
             <btn class="btn btn-primary btn-custom" id="fund-airline">Fund</btn>
@@ -139,6 +139,35 @@
           <div class="row-custom margin8">
             <div class="title">Funded:</div>
             <div class="value" id="fetch-airline-funded">...</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="title-big">Register flight</div>
+          <div class="row-custom">
+            <input class="input-flight" type="text" id="flight-number" placeholder="Flight number" />
+            <input class="input-flight" type="text" id="flight-origin-location" placeholder="Origin" />
+            <input class="input-flight" type="text" id="flight-destination-location" placeholder="Destination" />
+            <input
+              type="date"
+              value="2022-01-11"
+              min="2022-01-11"
+              max="2024-12-31"
+              class="input-flight"
+              id="flight-origin-time"
+              placeholder="Takeoff time"
+            />
+            <input
+              type="date"
+              value="2022-01-11"
+              min="2022-01-11"
+              max="2024-12-31"
+              class="input-flight"
+              type="text"
+              id="flight-destination-time"
+              placeholder="Landing Time"
+            />
+            <btn class="btn btn-primary btn-custom" id="register-flight">Register</btn>
           </div>
         </div>
       </div>

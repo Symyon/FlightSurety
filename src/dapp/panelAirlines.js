@@ -68,5 +68,28 @@ export default class PanelAirlines {
         this.populateAirlineFetchedInfo(result);
       });
     });
+
+    DOM.elid('register-flight').addEventListener('click', () => {
+      const flight = DOM.elid('flight-number').value;
+      const origin = DOM.elid('flight-origin-location').value;
+      const destination = DOM.elid('flight-destination-location').value;
+      const takeOff = new Date(DOM.elid('flight-origin-time').value).getTime();
+      const landing = new Date(DOM.elid('flight-destination-time').value).getTime();
+
+      this.contract.registerFlight(flight, origin, destination, takeOff, landing, (error, result) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+
+        this.contract.getRegisteredFlights((error, result) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          console.log(result);
+        });
+      });
+    });
   }
 }

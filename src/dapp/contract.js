@@ -199,4 +199,20 @@ export default class Contract {
         callback(error, payload);
       });
   }
+
+  registerFlight(number, origin, destination, takeOff, landing, callback) {
+    let self = this;
+    self.flightSuretyApp.methods
+      .registerFlight(number, origin, destination, takeOff, landing)
+      .send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
+        callback(error, { number, origin, destination, takeOff, landing });
+      });
+  }
+
+  getRegisteredFlights(callback) {
+    let self = this;
+    self.flightSuretyApp.methods.getRegisteredFlights().call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
+  }
 }

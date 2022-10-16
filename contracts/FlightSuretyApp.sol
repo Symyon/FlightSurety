@@ -26,19 +26,12 @@ contract FlightSuretyApp {
   uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
   uint256 private airlineFundsRequirement = 10000000000000000000; // Funds required for a new airline to register in wei
+  uint256 private MAX_INSURANCE_AMOUNT = 1 ether;
   address private contractOwner; // Account used to deploy contract
   bool private operational = true; // Blocks all state changes throughout the contract if false
   FlightSuretyData flightSuretyData;
   uint256 private constant MAX_COUNT_NO_MULTISIG_REQ = 4;
   uint16 MULTI_PARTY_SPLIT = 2; // Airlines percentage required to vote for a new airline to be registered (2 = 50%)
-
-  struct Flight {
-    bool isRegistered;
-    uint8 statusCode;
-    uint256 updatedTimestamp;
-    address airline;
-  }
-  mapping(bytes32 => Flight) private flights;
 
   constructor(address dataContract) public {
     contractOwner = msg.sender;
@@ -137,9 +130,19 @@ contract FlightSuretyApp {
    * @dev Register a future flight for insuring.
    *
    */
-  function registerFlight(string calldata _name) external requireIsOperational {
+  function registerFlight(
+    string calldata _name,
+    string calldata _origin,
+    string calldata _destination,
+    uint256 _takeoffTime,
+    uint256 _landingTime
+  ) external requireIsOperational {
     bytes32 flightKey = getFlightKey(msg.sender, _name, now);
-    flights[flightKey] = Flight({ isRegistered: true, statusCode: 0, updatedTimestamp: now, airline: msg.sender });
+    flightSuretyData.registerFlight(flightKey, _name, _origin, _destination, _takeoffTime, _landingTime);
+  }
+
+  function getRegisteredFlights() external view returns (bytes32[] memory) {
+    return flightSuretyData.getRegisteredFlights();
   }
 
   /**
@@ -338,4 +341,15 @@ contract FlightSuretyData {
       bool,
       bool
     );
+
+  function registerFlight(
+    bytes32 _flightKey,
+    string calldata _name,
+    string calldata _origin,
+    string calldata _destination,
+    uint256 _takeoffTime,
+    uint256 _landingTime
+  ) external returns (bool);
+
+  function getRegisteredFlights() external view returns (bytes32[] memory);
 }
