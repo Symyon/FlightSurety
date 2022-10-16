@@ -27,6 +27,21 @@ export default class PanelAirlines {
     DOM.elid('fetch-airline-funded').textContent = airline.isFunded;
   }
 
+  initDatePickers() {
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    let day = now.getDate();
+    let future = new Date(year + 3, month, day);
+    DOM.elid('origin-time').value = now.toISOString().split('T')[0];
+    DOM.elid('origin-time').min = now.toISOString().split('T')[0];
+    DOM.elid('origin-time').max = future.toISOString().split('T')[0];
+
+    DOM.elid('destination-time').value = now.toISOString().split('T')[0];
+    DOM.elid('destination-time').min = now.toISOString().split('T')[0];
+    DOM.elid('destination-time').max = future.toISOString().split('T')[0];
+  }
+
   initialize() {
     this.updateAirlineRegisterStatus();
     if (window.ethereum) {
@@ -67,6 +82,15 @@ export default class PanelAirlines {
         }
         this.populateAirlineFetchedInfo(result);
       });
+    });
+
+    this.initDatePickers();
+    DOM.elid('origin-time').addEventListener('change', () => {
+      const originTime = DOM.elid('origin-time').value;
+      DOM.elid('destination-time').min = originTime;
+      if (originTime > DOM.elid('destination-time').value) {
+        DOM.elid('destination-time').value = originTime;
+      }
     });
 
     DOM.elid('register-flight').addEventListener('click', () => {
