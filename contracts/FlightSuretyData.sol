@@ -29,6 +29,7 @@ contract FlightSuretyData {
   mapping(address => Vote) private votes;
 
   struct Flight {
+    string name;
     bool isRegistered;
     uint8 statusCode;
     uint256 updatedTimestamp;
@@ -244,6 +245,8 @@ contract FlightSuretyData {
   function registerFlight(
     bytes32 _flightKey,
     string calldata _name,
+    uint8 _statusCode,
+    address _airlineAddress,
     string calldata _origin,
     string calldata _destination,
     uint256 _takeoffTime,
@@ -252,10 +255,11 @@ contract FlightSuretyData {
     require(flights[_flightKey].isRegistered == false, 'Flight is already registered');
 
     flights[_flightKey] = Flight({
+      name: _name,
       isRegistered: true,
-      statusCode: 0,
+      statusCode: _statusCode,
       updatedTimestamp: now,
-      airline: msg.sender,
+      airline: _airlineAddress,
       origin: _origin,
       destination: _destination,
       takeoffTime: _takeoffTime,
@@ -269,6 +273,30 @@ contract FlightSuretyData {
 
   function getRegisteredFlights() external view returns (bytes32[] memory) {
     return registeredFlights;
+  }
+
+  function getFlightInfo(bytes32 _flightKey)
+    external
+    view
+    returns (
+      string memory,
+      uint8,
+      address,
+      string memory,
+      string memory,
+      uint256,
+      uint256
+    )
+  {
+    return (
+      flights[_flightKey].name,
+      flights[_flightKey].statusCode,
+      flights[_flightKey].airline,
+      flights[_flightKey].origin,
+      flights[_flightKey].destination,
+      flights[_flightKey].takeoffTime,
+      flights[_flightKey].landingTime
+    );
   }
 
   /**

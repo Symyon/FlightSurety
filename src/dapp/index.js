@@ -3,6 +3,7 @@ import Contract from './contract';
 import './flightsurety.css';
 import PanelAdmin from './panelAdmin';
 import PanelAirlines from './panelAirlines';
+import PanelPassengers from './panelPassengers';
 import { getDomValuesWithStyle } from './utils';
 
 function updateActiveAccountDisplayed(newAccount) {
@@ -40,9 +41,13 @@ function initAccountSelected(contract) {
     }
 
     let panelAdmin = new PanelAdmin(contract);
-    let panelAirlines = new PanelAirlines(contract);
     panelAdmin.initialize();
+
+    let panelAirlines = new PanelAirlines(contract);
     panelAirlines.initialize();
+
+    let pannlePassengers = new PanelPassengers(contract);
+    pannlePassengers.initialize();
 
     // User-submitted transaction
     // DOM.elid("submit-oracle").addEventListener("click", () => {

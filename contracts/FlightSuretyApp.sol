@@ -42,6 +42,7 @@ contract FlightSuretyApp {
   /*                                       EVENTS                                             */
   /********************************************************************************************/
   event UpdatedOperationalStatus(bool oldState, bool newState);
+  event RegisteredNewFlight(string flight, uint256 timestamp);
 
   /********************************************************************************************/
   /*                                       FUNCTION MODIFIERS                                 */
@@ -137,12 +138,38 @@ contract FlightSuretyApp {
     uint256 _takeoffTime,
     uint256 _landingTime
   ) external requireIsOperational {
-    bytes32 flightKey = getFlightKey(msg.sender, _name, now);
-    flightSuretyData.registerFlight(flightKey, _name, _origin, _destination, _takeoffTime, _landingTime);
+    bytes32 flightKey = getFlightKey(msg.sender, _name, _takeoffTime);
+    flightSuretyData.registerFlight(
+      flightKey,
+      _name,
+      STATUS_CODE_UNKNOWN,
+      msg.sender,
+      _origin,
+      _destination,
+      _takeoffTime,
+      _landingTime
+    );
+    emit RegisteredNewFlight(_name, now);
   }
 
   function getRegisteredFlights() external view returns (bytes32[] memory) {
     return flightSuretyData.getRegisteredFlights();
+  }
+
+  function getFlightInfo(bytes32 _flightKey)
+    public
+    view
+    returns (
+      string memory,
+      uint8,
+      address,
+      string memory,
+      string memory,
+      uint256,
+      uint256
+    )
+  {
+    return flightSuretyData.getFlightInfo(_flightKey);
   }
 
   /**
@@ -345,6 +372,8 @@ contract FlightSuretyData {
   function registerFlight(
     bytes32 _flightKey,
     string calldata _name,
+    uint8 _statusCode,
+    address _airlineAddress,
     string calldata _origin,
     string calldata _destination,
     uint256 _takeoffTime,
@@ -352,4 +381,17 @@ contract FlightSuretyData {
   ) external returns (bool);
 
   function getRegisteredFlights() external view returns (bytes32[] memory);
+
+  function getFlightInfo(bytes32 _flightKey)
+    external
+    view
+    returns (
+      string memory,
+      uint8,
+      address,
+      string memory,
+      string memory,
+      uint256,
+      uint256
+    );
 }

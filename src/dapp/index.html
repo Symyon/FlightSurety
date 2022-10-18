@@ -182,14 +182,41 @@
 
         <div>
           <div class="title-big">Purchase Insurance</div>
+
           <div class="row-custom">
-            <div class="title-medium">Airline:</div>
-            <input class="input-custom" type="text" id="insurance-airline" />
+            <label for="flights" class="title-medium">Flight:</label>
+            <select name="flights" id="flights" class="input-custom">
+              <option value="">-- Please select a flight --</option>
+            </select>
           </div>
-          <div class="row-custom">
-            <div class="title-medium">Flight:</div>
-            <input class="input-custom" type="text" id="insurance-fight" />
+
+          <div class="panel">
+            <div class="row-custom margin8">
+              <div class="title">Airline:</div>
+              <div class="value" id="insurance-airline">...</div>
+            </div>
+
+            <div class="row-custom margin8">
+              <div class="title">Origin:</div>
+              <div class="value" id="insurance-origin">...</div>
+            </div>
+
+            <div class="row-custom margin8">
+              <div class="title">Destination:</div>
+              <div class="value" id="insurance-destination">...</div>
+            </div>
+
+            <div class="row-custom margin8">
+              <div class="title">Take off:</div>
+              <div class="value" id="insurance-takeoff">...</div>
+            </div>
+
+            <div class="row-custom margin8">
+              <div class="title">Landing:</div>
+              <div class="value" id="insurance-landing">...</div>
+            </div>
           </div>
+
           <div class="row-custom">
             <div class="title-medium">Insurance amount:</div>
             <input class="input-amount" type="text" id="insurance-amount" placeholder="0.00" />
@@ -225,7 +252,7 @@
           <div class="row-custom">
             <div style="margin-left: 16px"></div>
             <div class="title">Withdraw to:</div>
-            <div class="value">N/A</div>
+            <div class="value" id="active-account">N/A</div>
             <div style="margin-left: 48px"></div>
             <div class="title">Insurance payout available:</div>
             <div style="margin-left: 32px"></div>

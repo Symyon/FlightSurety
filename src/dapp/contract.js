@@ -209,9 +209,20 @@ export default class Contract {
       });
   }
 
+  addListenerToFlightRegistration(callback) {
+    this.flightSuretyApp.events.RegisteredNewFlight({}, callback);
+  }
+
   getRegisteredFlights(callback) {
     let self = this;
     self.flightSuretyApp.methods.getRegisteredFlights().call({ from: self.owner }, (error, result) => {
+      callback(error, result);
+    });
+  }
+
+  getFlightInfo(flightKey, callback) {
+    let self = this;
+    self.flightSuretyApp.methods.getFlightInfo(flightKey).call({ from: self.owner }, (error, result) => {
       callback(error, result);
     });
   }
