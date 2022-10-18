@@ -221,23 +221,19 @@
             <div class="title-medium">Insurance amount:</div>
             <input class="input-amount" type="text" id="insurance-amount" placeholder="0.00" />
             <div class="title-medium">ETH</div>
-            <div style="flex: 1"></div>
+            <div class="title-medium" id="max-eth-warning">1 ETH max allowed</div>
             <btn class="btn btn-primary btn-custom-right" id="insurance-purchase-button">Purchase</btn>
-            <div style="flex: 4"></div>
           </div>
         </div>
 
         <div>
           <div class="title-big">Flight Status</div>
           <div class="row-custom">
-            <div class="title-medium">Flight:</div>
-            <input class="input-custom" type="text" id="insurance-airline" />
-            <btn class="btn btn-primary btn-custom-right" id="insurance-purchase-button">Check Status</btn>
-          </div>
-          <div class="row-custom">
-            <div style="margin-left: 128px"></div>
-            <div class="title">Payout address:</div>
-            <div class="value">N/A</div>
+            <label for="flights" class="title-medium">Flight:</label>
+            <select name="flights" id="status-flights" class="input-custom">
+              <option value="">-- Please select a flight --</option>
+            </select>
+            <btn class="btn btn-primary btn-custom-right" id="check-flight-button">Check Status</btn>
           </div>
         </div>
 

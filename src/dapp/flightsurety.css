@@ -198,6 +198,14 @@ nav {
   color: #9a9a9a;
 }
 
+#max-eth-warning {
+  color: #d14343;
+  font-size: 1.25rem;
+  margin: 16px 0px;
+  width: 180px;
+  display: none;
+}
+
 section {
   margin-bottom: 50px;
 }

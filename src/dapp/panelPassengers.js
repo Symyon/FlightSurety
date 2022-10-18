@@ -19,17 +19,23 @@ export default class PanelPassengers {
   }
 
   populateFlightInfo() {
+    const flightSatusSelect = DOM.elid('status-flights');
+    flightSatusSelect.innerHTML = '';
     const flightSelect = DOM.elid('flights');
     flightSelect.innerHTML = '';
+
     const defaultOption = document.createElement('option');
     defaultOption.value = '';
     defaultOption.text = '-- Please select a flight --';
     flightSelect.appendChild(defaultOption);
+    flightSatusSelect.appendChild(defaultOption.cloneNode(true));
+
     this.flights.forEach((flight) => {
       const option = document.createElement('option');
       option.value = flight.key;
       option.text = flight.name;
       flightSelect.appendChild(option);
+      flightSatusSelect.appendChild(option.cloneNode(true));
     });
   }
 
@@ -40,7 +46,6 @@ export default class PanelPassengers {
         return;
       }
       this.flights = [];
-      console.log(result);
       for (let i = 0; i < result.length; i++) {
         this.contract.getFlightInfo(result[i], (err, res) => {
           if (err) {
