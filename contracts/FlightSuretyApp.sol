@@ -225,6 +225,10 @@ contract FlightSuretyApp {
     return flightSuretyData.getInsuranceInfo(_flightKey, msg.sender);
   }
 
+  function getPassengerBalance() external view returns (uint256) {
+    return flightSuretyData.getPassengerBalance(msg.sender);
+  }
+
   // region ORACLE MANAGEMENT
 
   // Incremented to add pseudo-randomness at various points
@@ -433,4 +437,6 @@ contract FlightSuretyData {
       uint256,
       bool
     );
+
+  function getPassengerBalance(address _passenger) external view returns (uint256);
 }

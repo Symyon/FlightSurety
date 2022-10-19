@@ -258,4 +258,11 @@ export default class Contract {
       callback(error, this.web3.utils.fromWei(result, 'ether'));
     });
   }
+
+  getPassengerBalance(callback) {
+    let self = this;
+    self.flightSuretyApp.methods.getPassengerBalance().call({ from: self.owner }, (error, result) => {
+      callback(error, this.web3.utils.fromWei(result, 'ether'));
+    });
+  }
 }

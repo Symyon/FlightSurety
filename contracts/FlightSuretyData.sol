@@ -47,10 +47,12 @@ contract FlightSuretyData {
     address passenger;
     uint256 value;
     bool isCredited;
+    bool isInsured;
   }
 
   mapping(bytes32 => Insurance) private insurances;
   mapping(bytes32 => address[]) private insurancesByFlight;
+  mapping(address => uint256) private passengersBalance;
 
   /********************************************************************************************/
   /*                                       EVENT DEFINITIONS                                  */
@@ -352,6 +354,10 @@ contract FlightSuretyData {
       insurances[insuranceKey].value,
       insurances[insuranceKey].isCredited
     );
+  }
+
+  function getPassengerBalance(address _passenger) external view returns (uint256) {
+    return passengersBalance[_passenger];
   }
 
   /**

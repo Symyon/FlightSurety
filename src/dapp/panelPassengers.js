@@ -113,11 +113,19 @@ export default class PanelPassengers {
     });
   }
 
-  updatePassengerAccountInfo() {}
+  updatePassengerBallance() {
+    this.contract.getPassengerBalance((error, result) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      DOM.elid('passenger-balance').textContent = `${result} ETH`;
+    });
+  }
 
   initialize() {
     const self = this;
-    this.updatePassengerAccountInfo();
+    this.updatePassengerBallance();
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', function (accounts) {
         self.updatePassengerAccountInfo();
