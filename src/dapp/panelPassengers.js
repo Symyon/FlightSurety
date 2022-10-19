@@ -16,6 +16,13 @@ export default class PanelPassengers {
     DOM.elid('insurance-destination').textContent = flight.destination;
     DOM.elid('insurance-takeoff').textContent = new Date(Number(flight.takeoffTime)).toUTCString();
     DOM.elid('insurance-landing').textContent = new Date(Number(flight.takeoffTime)).toUTCString();
+    this.contract.fetchAirlineInfo(flight.airline, (error, result) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      DOM.elid('insurance-airline-name').textContent = result.name;
+    });
   }
 
   populateFlightInfo() {
