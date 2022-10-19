@@ -50,7 +50,7 @@ contract FlightSuretyData {
   }
 
   mapping(bytes32 => Insurance) private insurances;
-  mapping(flightKey => address[]) private insurancesByFlight;
+  mapping(bytes32 => address[]) private insurancesByFlight;
 
   /********************************************************************************************/
   /*                                       EVENT DEFINITIONS                                  */
