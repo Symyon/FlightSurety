@@ -323,6 +323,9 @@ contract FlightSuretyData {
       value: insurancePrice + msg.value,
       isCredited: false
     });
+
+    address airline = flights[_flightKey].airline;
+    airlines[airline].funds = airlines[airline].funds.add(msg.value);
   }
 
   function getInsuranceInfo(bytes32 _flightKey, address _passenger)
