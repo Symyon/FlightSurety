@@ -50,6 +50,7 @@ contract FlightSuretyData {
   }
 
   mapping(bytes32 => Insurance) private insurances;
+  mapping(flightKey => address[]) private insurancesByFlight;
 
   /********************************************************************************************/
   /*                                       EVENT DEFINITIONS                                  */
@@ -316,13 +317,19 @@ contract FlightSuretyData {
     require(flights[_flightKey].isRegistered == true, 'Flight is not registered');
 
     bytes32 insuranceKey = keccak256(abi.encodePacked(_flightKey, _passenger));
+    bool isAlreadyInsured = insurances[insuranceKey].isInsured;
     uint256 insurancePrice = insurances[insuranceKey].value;
     insurances[insuranceKey] = Insurance({
       flightKey: _flightKey,
       passenger: _passenger,
       value: insurancePrice + msg.value,
-      isCredited: false
+      isCredited: false,
+      isInsured: true
     });
+
+    if (isAlreadyInsured == false) {
+      insurancesByFlight[_flightKey].push(_passenger);
+    }
 
     address airline = flights[_flightKey].airline;
     airlines[airline].funds = airlines[airline].funds.add(msg.value);
