@@ -82,16 +82,7 @@ export default class PanelPassengers {
             return;
           }
 
-          const flight = {
-            key: result[i],
-            name: res[0],
-            statusCode: res[1],
-            airline: res[2],
-            origin: res[3],
-            destination: res[4],
-            takeoffTime: res[5],
-            landingTime: res[6],
-          };
+          const flight = { key: result[i], ...res };
           this.flights.push(flight);
 
           if (this.flights.length === result.length) {
@@ -123,12 +114,28 @@ export default class PanelPassengers {
     });
   }
 
+  display(title, description, results) {
+    let displayDiv = DOM.elid('display-wrapper');
+    let section = DOM.section();
+    section.appendChild(DOM.h2(title));
+    section.appendChild(DOM.h5(description));
+    results.map((result) => {
+      let row = section.appendChild(DOM.div({ className: 'row' }));
+      row.appendChild(DOM.div({ className: 'col-sm-4 field' }, result.label));
+      row.appendChild(
+        DOM.div({ className: 'col-sm-8 field-value' }, result.error ? String(result.error) : String(result.value))
+      );
+      section.appendChild(row);
+    });
+    displayDiv.append(section);
+  }
+
   initialize() {
     const self = this;
     this.updatePassengerBallance();
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', function (accounts) {
-        self.updatePassengerAccountInfo();
+        self.updatePassengerBallance();
       });
     }
 
@@ -149,12 +156,33 @@ export default class PanelPassengers {
       if (!flight || !amount) {
         return;
       }
-      self.contract.buyInsurance(flight, amount, (error, result) => {
+      this.contract.buyInsurance(flight, amount, (error, result) => {
         if (error) {
           console.log(error);
           return;
         }
         self.fetchInsuredAmount(flight);
+      });
+    });
+
+    DOM.elid('submit-oracle').addEventListener('click', () => {
+      const flight = DOM.elid('status-flights').value;
+      this.contract.getFlightInfo(flight, (err, res) => {
+        if (err) {
+          console.log('error', err);
+          return;
+        }
+
+        const airline = res.airline;
+        self.contract.fetchFlightStatus(flight, airline, (error, result) => {
+          self.display('Oracles', 'Trigger oracles', [
+            {
+              label: 'Fetch Flight Status',
+              error: error,
+              value: result.flight + ' ' + result.timestamp,
+            },
+          ]);
+        });
       });
     });
   }

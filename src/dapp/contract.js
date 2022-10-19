@@ -186,10 +186,10 @@ export default class Contract {
     });
   }
 
-  fetchFlightStatus(flight, callback) {
+  fetchFlightStatus(flight, airline, callback) {
     let self = this;
     let payload = {
-      airline: self.airlines[0],
+      airline: airline,
       flight: flight,
       timestamp: Math.floor(Date.now() / 1000),
     };
@@ -223,7 +223,16 @@ export default class Contract {
   getFlightInfo(flightKey, callback) {
     let self = this;
     self.flightSuretyApp.methods.getFlightInfo(flightKey).call({ from: self.owner }, (error, result) => {
-      callback(error, result);
+      const flight = {
+        name: result[0] ? result[0] : 'N/A',
+        statusCode: result[1] ? result[1] : 'N/A',
+        airline: result[2] ? result[2] : 'N/A',
+        origin: result[3] ? result[3] : 'N/A',
+        destination: result[4] ? result[4] : 'N/A',
+        takeoffTime: result[5] ? result[5] : 'N/A',
+        landingTime: result[6] ? result[6] : 'N/A',
+      };
+      callback(error, flight);
     });
   }
 
