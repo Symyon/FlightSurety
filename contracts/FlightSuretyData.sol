@@ -42,6 +42,15 @@ contract FlightSuretyData {
   mapping(bytes32 => Flight) private flights;
   bytes32[] private registeredFlights;
 
+  struct Insurance {
+    bytes32 flightKey;
+    address passenger;
+    uint256 value;
+    bool isCredited;
+  }
+
+  mapping(bytes32 => Insurance) private insurances;
+
   /********************************************************************************************/
   /*                                       EVENT DEFINITIONS                                  */
   /********************************************************************************************/
@@ -303,7 +312,37 @@ contract FlightSuretyData {
    * @dev Buy insurance for a flight
    *
    */
-  function buy() external payable {}
+  function buy(bytes32 _flightKey, address _passenger) external payable {
+    require(flights[_flightKey].isRegistered == true, 'Flight is not registered');
+
+    bytes32 insuranceKey = keccak256(abi.encodePacked(_flightKey, _passenger));
+    uint256 insurancePrice = insurances[insuranceKey].value;
+    insurances[insuranceKey] = Insurance({
+      flightKey: _flightKey,
+      passenger: _passenger,
+      value: insurancePrice + msg.value,
+      isCredited: false
+    });
+  }
+
+  function getInsuranceInfo(bytes32 _flightKey, address _passenger)
+    external
+    view
+    returns (
+      bytes32,
+      address,
+      uint256,
+      bool
+    )
+  {
+    bytes32 insuranceKey = keccak256(abi.encodePacked(_flightKey, _passenger));
+    return (
+      insurances[insuranceKey].flightKey,
+      insurances[insuranceKey].passenger,
+      insurances[insuranceKey].value,
+      insurances[insuranceKey].isCredited
+    );
+  }
 
   /**
    *  @dev Credits payouts to insurees

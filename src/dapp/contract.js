@@ -226,4 +226,36 @@ export default class Contract {
       callback(error, result);
     });
   }
+
+  buyInsurance(flightKey, value, callback) {
+    let self = this;
+    self.flightSuretyApp.methods
+      .buyInsurance(flightKey)
+      .send(
+        { from: self.owner, value: this.web3.utils.toWei(value, 'ether'), gasLimit: this.gasLimit },
+        (error, result) => {
+          callback(error, result);
+        }
+      );
+  }
+
+  getInsuranceInfo(flightKey, callback) {
+    let self = this;
+    self.flightSuretyApp.methods.getInsuranceInfo(flightKey).call({ from: self.owner }, (error, result) => {
+      const insurance = {
+        flightKey: result[0] ? result[0] : 'N/A',
+        passenger: result[1] ? result[1] : 'N/A',
+        amount: result[2] ? this.web3.utils.fromWei(result[2], 'ether') : 'N/A',
+        isCredited: result[3],
+      };
+      callback(error, insurance);
+    });
+  }
+
+  getMaximumInsuranceAmount(callback) {
+    let self = this;
+    self.flightSuretyApp.methods.getMaximumInsuranceAmount().call({ from: self.owner }, (error, result) => {
+      callback(error, this.web3.utils.fromWei(result, 'ether'));
+    });
+  }
 }

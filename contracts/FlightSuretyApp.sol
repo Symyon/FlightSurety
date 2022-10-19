@@ -198,6 +198,33 @@ contract FlightSuretyApp {
     emit OracleRequest(index, airline, flight, timestamp);
   }
 
+  function buyInsurance(bytes32 _flightKey) external payable requireIsOperational {
+    require(msg.value > 0, 'Insurance value must be greater than 0');
+
+    (, , uint256 amount, bool isCredited) = getInsuranceInfo(_flightKey);
+    require(isCredited == false, 'Insurance is already credited');
+    uint256 totalInsurance = amount + msg.value;
+    require(totalInsurance <= MAX_INSURANCE_AMOUNT, 'Total insurance amount cannot be greater than 1 ether');
+    flightSuretyData.buy.value(msg.value)(_flightKey, msg.sender);
+  }
+
+  function getMaximumInsuranceAmount() external view returns (uint256) {
+    return MAX_INSURANCE_AMOUNT;
+  }
+
+  function getInsuranceInfo(bytes32 _flightKey)
+    public
+    view
+    returns (
+      bytes32,
+      address,
+      uint256,
+      bool
+    )
+  {
+    return flightSuretyData.getInsuranceInfo(_flightKey, msg.sender);
+  }
+
   // region ORACLE MANAGEMENT
 
   // Incremented to add pseudo-randomness at various points
@@ -393,5 +420,17 @@ contract FlightSuretyData {
       string memory,
       uint256,
       uint256
+    );
+
+  function buy(bytes32 _flightKey, address _passenger) external payable;
+
+  function getInsuranceInfo(bytes32 _flightKey, address _passenger)
+    external
+    view
+    returns (
+      bytes32,
+      address,
+      uint256,
+      bool
     );
 }

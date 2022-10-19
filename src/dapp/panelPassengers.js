@@ -7,9 +7,30 @@ export default class PanelPassengers {
     this.flights = [];
   }
 
+  fetchInsuredAmount(flightKey) {
+    this.contract.getInsuranceInfo(flightKey, (error, result) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      console.log(result);
+      DOM.elid('insured-eth').textContent = `${result.amount} ETH insured,`;
+    });
+  }
+
   onChangedFlight() {
-    const flight = this.flights.find((f) => f.key === DOM.elid('flights').value);
-    if (!flight) return;
+    const selectedFlight = DOM.elid('flights').value;
+    const flight = this.flights.find((f) => f.key === selectedFlight);
+    if (!flight) {
+      DOM.elid('insurance-airline-name').textContent = '...';
+      DOM.elid('insurance-airline').textContent = '...';
+      DOM.elid('insurance-origin').textContent = '...';
+      DOM.elid('insurance-destination').textContent = '...';
+      DOM.elid('insurance-takeoff').textContent = '...';
+      DOM.elid('insurance-landing').textContent = '...';
+      DOM.elid('insured-eth').textContent = '';
+      return;
+    }
 
     DOM.elid('insurance-airline').textContent = flight.airline;
     DOM.elid('insurance-origin').textContent = flight.origin;
@@ -23,6 +44,7 @@ export default class PanelPassengers {
       }
       DOM.elid('insurance-airline-name').textContent = result.name;
     });
+    this.fetchInsuredAmount(selectedFlight);
   }
 
   populateFlightInfo() {
@@ -105,5 +127,27 @@ export default class PanelPassengers {
     this.getRegisteredFlights();
     this.addListenerToFlightRegistration();
     DOM.elid('flights').addEventListener('change', () => self.onChangedFlight());
+    this.contract.getMaximumInsuranceAmount((error, result) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      DOM.elid('max-eth').textContent = `${result} ETH max allowed`;
+    });
+
+    DOM.elid('buy-insurance').addEventListener('click', () => {
+      const flight = DOM.elid('flights').value;
+      const amount = DOM.elid('insurance-amount').value;
+      if (!flight || !amount) {
+        return;
+      }
+      self.contract.buyInsurance(flight, amount, (error, result) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        self.fetchInsuredAmount(flight);
+      });
+    });
   }
 }

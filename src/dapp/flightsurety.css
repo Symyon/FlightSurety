@@ -188,6 +188,11 @@ nav {
   font-size: 1.25rem;
 }
 
+.currency {
+  min-width: 64px;
+  font-size: 1.25rem;
+}
+
 .title-big {
   color: #fff;
   font-size: 1.5rem;
@@ -198,12 +203,10 @@ nav {
   color: #9a9a9a;
 }
 
-#max-eth-warning {
-  color: #d14343;
+.max-eth-warning {
+  color: #9a9a9a;
   font-size: 1.25rem;
-  margin: 16px 0px;
-  width: 180px;
-  display: none;
+  margin: 0px 4px;
 }
 
 section {

@@ -102,7 +102,7 @@
           <div class="row-custom">
             <input class="input-custom" type="text" id="fund-airline-address" placeholder="Address" />
             <input class="input-amount" type="text" id="fund-airline-amount" placeholder="0.00" />
-            <div class="title-medium">ETH</div>
+            <div class="currency">ETH</div>
             <btn class="btn btn-primary btn-custom" id="fund-airline">Fund</btn>
           </div>
         </div>
@@ -225,9 +225,12 @@
           <div class="row-custom">
             <div class="title-medium">Insurance amount:</div>
             <input class="input-amount" type="text" id="insurance-amount" placeholder="0.00" />
-            <div class="title-medium">ETH</div>
-            <div class="title-medium" id="max-eth-warning">1 ETH max allowed</div>
-            <btn class="btn btn-primary btn-custom-right" id="insurance-purchase-button">Purchase</btn>
+            <div class="currency">ETH</div>
+
+            <div class="max-eth-warning" id="insured-eth"></div>
+            <div class="max-eth-warning" id="max-eth">1 ETH max allowed</div>
+
+            <btn class="btn btn-primary btn-custom-right" id="buy-insurance">Purchase</btn>
           </div>
         </div>
 
@@ -246,7 +249,7 @@
           <div class="title-big">Payout</div>
           <div class="row-custom">
             <input class="input-amount" type="text" id="insurance-amount" placeholder="0.00" />
-            <div class="title-medium">ETH</div>
+            <div class="currency">ETH</div>
             <btn class="btn btn-primary btn-custom-right" id="withdraw-button">Withdraw</btn>
             <btn class="btn btn-primary btn-custom-right" id="payout-refresh-button">Refresh</btn>
           </div>
