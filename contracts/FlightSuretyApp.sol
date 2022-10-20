@@ -178,24 +178,29 @@ contract FlightSuretyApp {
    */
   function processFlightStatus(
     address airline,
-    string memory flight,
+    bytes32 flightKey,
     uint256 timestamp,
     uint8 statusCode
-  ) internal pure {}
+  ) internal pure {   
+    if (statusCode == STATUS_CODE_LATE_AIRLINE) {
+      
+    }
+
+  }
 
   // Generate a request for oracles to fetch flight information
   function fetchFlightStatus(
     address airline,
-    string calldata flight,
+    bytes32 flightKey,
     uint256 timestamp
   ) external {
     uint8 index = getRandomIndex(msg.sender);
 
     // Generate a unique key for storing the request
-    bytes32 key = keccak256(abi.encodePacked(index, airline, flight, timestamp));
+    bytes32 key = keccak256(abi.encodePacked(index, airline, flightKey, timestamp));
     oracleResponses[key] = ResponseInfo({ requester: msg.sender, isOpen: true });
-
-    emit OracleRequest(index, airline, flight, timestamp);
+    (string memory flightName, , , , , , ) = flightSuretyData.getFlightInfo(flightKey);
+    emit OracleRequest(index, airline, flightKey, flightName, timestamp);
   }
 
   function buyInsurance(bytes32 _flightKey) external payable requireIsOperational {
@@ -262,14 +267,14 @@ contract FlightSuretyApp {
   mapping(bytes32 => ResponseInfo) private oracleResponses;
 
   // Event fired each time an oracle submits a response
-  event FlightStatusInfo(address airline, string flight, uint256 timestamp, uint8 status);
+  event FlightStatusInfo(address airline, bytes32 flight, uint256 timestamp, uint8 status);
 
-  event OracleReport(address airline, string flight, uint256 timestamp, uint8 status);
+  event OracleReport(address airline, bytes32 flightKey, uint256 timestamp, uint8 status);
 
   // Event fired when flight status request is submitted
   // Oracles track this and if they have a matching index
   // they fetch data and submit a response
-  event OracleRequest(uint8 index, address airline, string flight, uint256 timestamp);
+  event OracleRequest(uint8 index, address airline, bytes32 flightKey, string flightName, uint256 timestamp);
 
   // Register an oracle with the contract
   function registerOracle() external payable {
@@ -298,7 +303,7 @@ contract FlightSuretyApp {
   function submitOracleResponse(
     uint8 index,
     address airline,
-    string calldata flight,
+    bytes32 flightKey,
     uint256 timestamp,
     uint8 statusCode
   ) external {
@@ -309,19 +314,19 @@ contract FlightSuretyApp {
       'Index does not match oracle request'
     );
 
-    bytes32 key = keccak256(abi.encodePacked(index, airline, flight, timestamp));
+    bytes32 key = keccak256(abi.encodePacked(index, airline, flightKey, timestamp));
     require(oracleResponses[key].isOpen, 'Flight or timestamp do not match oracle request');
 
     oracleResponses[key].responses[statusCode].push(msg.sender);
 
     // Information isn't considered verified until at least MIN_RESPONSES
     // oracles respond with the *** same *** information
-    emit OracleReport(airline, flight, timestamp, statusCode);
+    emit OracleReport(airline, flightKey, timestamp, statusCode);
     if (oracleResponses[key].responses[statusCode].length >= MIN_RESPONSES) {
-      emit FlightStatusInfo(airline, flight, timestamp, statusCode);
+      emit FlightStatusInfo(airline, flightKey, timestamp, statusCode);
 
       // Handle flight status as appropriate
-      processFlightStatus(airline, flight, timestamp, statusCode);
+      processFlightStatus(airline, flightKey, timestamp, statusCode);
     }
   }
 
