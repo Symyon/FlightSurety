@@ -18,12 +18,12 @@ contract('Oracles', async (accounts) => {
 
   it('can register oracles', async () => {
     // ARRANGE
-    let fee = await config.flightSuretyApp.REGISTRATION_FEE.call();
+    const fee = await config.flightSuretyApp.REGISTRATION_FEE.call();
 
     // ACT
-    for (let a = 1; a < TEST_ORACLES_COUNT; a++) {
-      await config.flightSuretyApp.registerOracle({ from: accounts[a], value: fee });
-      let result = await config.flightSuretyApp.getMyIndexes.call({ from: accounts[a] });
+    for (let i = 0; i < TEST_ORACLES_COUNT; i++) {
+      await config.flightSuretyApp.registerOracle({ from: accounts[i], value: fee });
+      let result = await config.flightSuretyApp.getMyIndexes.call({ from: accounts[i] });
       console.log(`Oracle Registered: ${result[0]}, ${result[1]}, ${result[2]}`);
     }
   });
@@ -65,5 +65,4 @@ contract('Oracles', async (accounts) => {
 });
 
 //TEst required
-// Upon startup, 20+ oracles are registered and their assigned indexes are persisted in memory
 // Server will loop through all registered oracles, identify those oracles for which the OracleRequest event applies, and respond by calling into FlightSuretyApp contract with random status code of Unknown (0), On Time (10) or Late Airline (20), Late Weather (30), Late Technical (40), or Late Other (50)
