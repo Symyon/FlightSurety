@@ -263,7 +263,7 @@ contract FlightSuretyData {
     string calldata _destination,
     uint256 _takeoffTime,
     uint256 _landingTime
-  ) external requireIsOperational requireRegisteredAndFunded returns (bool success) {
+  ) external requiredAuthorized requireRegisteredAndFunded requireIsOperational returns (bool success) {
     require(flights[_flightKey].isRegistered == false, 'Flight is already registered');
 
     flights[_flightKey] = Flight({
@@ -315,7 +315,7 @@ contract FlightSuretyData {
    * @dev Buy insurance for a flight
    *
    */
-  function buy(bytes32 _flightKey, address _passenger) external payable {
+  function buy(bytes32 _flightKey, address _passenger) external payable requiredAuthorized requireIsOperational {
     require(flights[_flightKey].isRegistered == true, 'Flight is not registered');
 
     bytes32 insuranceKey = keccak256(abi.encodePacked(_flightKey, _passenger));
@@ -363,7 +363,7 @@ contract FlightSuretyData {
   /**
    *  @dev Credits payouts to insurees
    */
-  function creditInsurees(address _airline, bytes32 _flightKey) external {
+  function creditInsurees(address _airline, bytes32 _flightKey) external requiredAuthorized requireIsOperational {
     require(flights[_flightKey].isRegistered == true, 'Flight is not registered');
 
     address[] memory passengers = insurancesByFlight[_flightKey];
@@ -385,7 +385,7 @@ contract FlightSuretyData {
    *  @dev Transfers eligible payout funds to insuree
    *
    */
-  function pay() external pure {}
+  function pay(address _passenger) external pure requiredAuthorized requireIsOperational {}
 
   /**
    * @dev Initial funding for the insurance. Unless there are too many delayed flights

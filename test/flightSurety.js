@@ -162,8 +162,3 @@ contract('Flight Surety Tests', async (accounts) => {
     assert.equal(authorized, true, 'Contract is not authorized');
   });
 });
-
-//TEst required
-// Passengers may pay up to 1 ether for purchasing flight insurance.
-// If flight is delayed due to airline fault, passenger receives credit of 1.5X the amount they paid
-// Passenger can withdraw any funds owed to them as a result of receiving credit for insurance payout
