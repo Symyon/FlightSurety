@@ -165,5 +165,13 @@ export default class PanelPassengers {
         });
       });
     });
+
+    this.contract.addListenerForFlightStatusUpdate((error, data) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      DOM.elid('flight-status').textContent = 'Flight status updated to ' + data.statusCode;
+    });
   }
 }

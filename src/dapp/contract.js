@@ -275,4 +275,17 @@ export default class Contract {
       callback(error, this.web3.utils.fromWei(result, 'ether'));
     });
   }
+
+  addListenerForFlightStatusUpdate(callback) {
+    this.flightSuretyApp.events.FlightStatusInfo({}, (error, result) => {
+      const { returnValues } = result;
+      const status = {
+        airline: returnValues[0],
+        flightKey: returnValues[1],
+        timestamp: returnValues[2],
+        statusCode: returnValues[3],
+      };
+      callback(error, status);
+    });
+  }
 }
