@@ -54,6 +54,9 @@ Deploy the contents of the ./dapp folder
 2. Airlines panel has a utility that allows reading airline information for any address provided, it is handy to understand what state is the airline (registered or not, funded or not etc). It also allowing funding of an airline, funds can be sent by any address (active MetaMask account) and is a requirement before attempting to register a new airline. Airline funds might fall under treshold if an insurance has been paid, in that case airline need to get more funding before it can be considered funded again. (10 ETH min)  
 3.  Flights are not hardcoded and needs to be registered by a registered and funded airline into the Data smart contract. After registering any flight, the drop down  selector  for flights will be populated with the new values. If there are any issues with that, a refresh of the page should bring latest flights registered.
 
+(images/airlines-1.png)
+(images/airlines-2.png)
+
 ### Passenger Panel
 1. Flights can be selected from the drop down list to reveal detailed information about it and it also works asthe selected flight to buy insurance for.
 2. Insurance can be bought multiple times by the same passanger and will add up to the total amount insured. Total insured amount will not be allowed to exceed the limit of 1 ETH.
