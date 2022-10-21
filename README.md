@@ -66,6 +66,9 @@ Deploy the contents of the ./dapp folder
 
 *Every operation is done from the active account in MetaMask. Each panel will show what is the active account and any related information related to it.
 
+![](images/passenger-1.png)
+![](images/passenger-2.png)
+
 
 ## Resources
 
