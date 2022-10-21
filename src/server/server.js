@@ -39,7 +39,7 @@ function processOracleRequest(event, oracles) {
   for (let i = 0; i < oracles.length; i++) {
     const oracle = oracles[i];
     if (oracle.ids.includes(index)) {
-      const statusCode = statusCodes[Math.floor(Math.random() * 5)];
+      const statusCode = 20;//statusCodes[Math.floor(Math.random() * 5)];
 
       console.log(
         `Oracle ${oracle.address} is responding with status code ${statusCode}` +
