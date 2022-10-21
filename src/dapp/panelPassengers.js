@@ -13,7 +13,6 @@ export default class PanelPassengers {
         console.log(error);
         return;
       }
-      console.log(result);
       DOM.elid('insured-eth').textContent = `${result.amount} ETH insured,`;
     });
   }
@@ -114,22 +113,6 @@ export default class PanelPassengers {
     });
   }
 
-  display(title, description, results) {
-    let displayDiv = DOM.elid('display-wrapper');
-    let section = DOM.section();
-    section.appendChild(DOM.h2(title));
-    section.appendChild(DOM.h5(description));
-    results.map((result) => {
-      let row = section.appendChild(DOM.div({ className: 'row' }));
-      row.appendChild(DOM.div({ className: 'col-sm-4 field' }, result.label));
-      row.appendChild(
-        DOM.div({ className: 'col-sm-8 field-value' }, result.error ? String(result.error) : String(result.value))
-      );
-      section.appendChild(row);
-    });
-    displayDiv.append(section);
-  }
-
   initialize() {
     const self = this;
     this.updatePassengerBallance();
@@ -174,14 +157,11 @@ export default class PanelPassengers {
         }
 
         const airline = res.airline;
-        self.contract.fetchFlightStatus(flight, airline, (error, result) => {
-          self.display('Oracles', 'Trigger oracles', [
-            {
-              label: 'Fetch Flight Status',
-              error: error,
-              value: result.flight + ' ' + result.timestamp,
-            },
-          ]);
+        const flightName = res.name;
+        self.contract.fetchFlightStatus(flight, flightName, airline, (error, result) => {
+          DOM.elid('flight-status').textContent = `Fetching status: ${
+            error ? error : `flight ${result.flightName}  ${new Date(Number(result.timestamp)).toUTCString()}`
+          }`;
         });
       });
     });

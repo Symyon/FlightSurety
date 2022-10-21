@@ -363,7 +363,23 @@ contract FlightSuretyData {
   /**
    *  @dev Credits payouts to insurees
    */
-  function creditInsurees() external pure {}
+  function creditInsurees(address _airline, bytes32 _flightKey) external {
+    require(flights[_flightKey].isRegistered == true, 'Flight is not registered');
+
+    address[] memory passengers = insurancesByFlight[_flightKey];
+    for (uint256 i = 0; i < passengers.length; i++) {
+      address passenger = passengers[i];
+      bytes32 insuranceKey = keccak256(abi.encodePacked(_flightKey, passenger));
+      bool wasCredited = insurances[insuranceKey].isCredited;
+      insurances[insuranceKey].isCredited = true;
+      if (wasCredited == false) {
+        bool enoughFunds = airlines[_airline].funds >= insurances[insuranceKey].value;
+        require(enoughFunds == true, 'Not enough funds');
+        airlines[_airline].funds = airlines[_airline].funds.sub(insurances[insuranceKey].value);
+        passengersBalance[passenger] = passengersBalance[passenger].add(insurances[insuranceKey].value.mul(3).div(2));
+      }
+    }
+  }
 
   /**
    *  @dev Transfers eligible payout funds to insuree

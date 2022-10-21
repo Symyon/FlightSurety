@@ -186,11 +186,12 @@ export default class Contract {
     });
   }
 
-  fetchFlightStatus(flight, airline, callback) {
+  fetchFlightStatus(flight, flightName, airline, callback) {
     let self = this;
     let payload = {
       airline: airline,
       flight: flight,
+      flightName: flightName,
       timestamp: Math.floor(Date.now() / 1000),
     };
     self.flightSuretyApp.methods

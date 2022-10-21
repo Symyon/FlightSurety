@@ -179,13 +179,11 @@ contract FlightSuretyApp {
   function processFlightStatus(
     address airline,
     bytes32 flightKey,
-    uint256 timestamp,
     uint8 statusCode
-  ) internal pure {   
+  ) internal {
     if (statusCode == STATUS_CODE_LATE_AIRLINE) {
-      
+      flightSuretyData.creditInsurees(airline, flightKey);
     }
-
   }
 
   // Generate a request for oracles to fetch flight information
@@ -326,7 +324,7 @@ contract FlightSuretyApp {
       emit FlightStatusInfo(airline, flightKey, timestamp, statusCode);
 
       // Handle flight status as appropriate
-      processFlightStatus(airline, flightKey, timestamp, statusCode);
+      processFlightStatus(airline, flightKey, statusCode);
     }
   }
 
@@ -448,4 +446,6 @@ contract FlightSuretyData {
     );
 
   function getPassengerBalance(address _passenger) external view returns (uint256);
+
+  function creditInsurees(address _airline, bytes32 _flightKey) external;
 }
