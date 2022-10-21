@@ -385,7 +385,12 @@ contract FlightSuretyData {
    *  @dev Transfers eligible payout funds to insuree
    *
    */
-  function pay(address _passenger) external pure requiredAuthorized requireIsOperational {}
+  function pay(address payable _passenger, uint256 _amount) external  requiredAuthorized requireIsOperational {
+    require(_amount > 0, 'Amount must be greater than 0');
+    require(_amount <= passengersBalance[_passenger], 'Not enough funds');
+    passengersBalance[_passenger] = passengersBalance[_passenger].sub(_amount);
+    _passenger.transfer(_amount);
+  }
 
   /**
    * @dev Initial funding for the insurance. Unless there are too many delayed flights

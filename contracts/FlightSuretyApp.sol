@@ -232,6 +232,10 @@ contract FlightSuretyApp {
     return flightSuretyData.getPassengerBalance(msg.sender);
   }
 
+  function pay(uint256 _amount) external requireIsOperational {
+    flightSuretyData.pay(msg.sender, _amount);
+  }
+
   // region ORACLE MANAGEMENT
 
   // Incremented to add pseudo-randomness at various points
@@ -448,4 +452,6 @@ contract FlightSuretyData {
   function getPassengerBalance(address _passenger) external view returns (uint256);
 
   function creditInsurees(address _airline, bytes32 _flightKey) external;
+
+  function pay(address payable _passenger, uint256 _amount) external;
 }

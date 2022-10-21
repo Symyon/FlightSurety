@@ -173,5 +173,16 @@ export default class PanelPassengers {
       }
       DOM.elid('flight-status').textContent = 'Flight status updated to ' + data.statusCode;
     });
+
+    DOM.elid('withdraw-button').addEventListener('click', () => {
+      const amount = DOM.elid('withdraw-amount').value;
+      this.contract.withdraw(amount, (error, result) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        self.updatePassengerBallance();
+      });
+    });
   }
 }

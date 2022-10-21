@@ -288,4 +288,12 @@ export default class Contract {
       callback(error, status);
     });
   }
+
+  withdraw(_amount, callback) {
+    let self = this;
+    const amount = this.web3.utils.toWei(_amount, 'ether');
+    self.flightSuretyApp.methods.pay(amount).send({ from: self.owner, gasLimit: this.gasLimit }, (error, result) => {
+      callback(error, result);
+    });
+  }
 }
